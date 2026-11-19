@@ -74,3 +74,68 @@ function ventasPorCiudad(ventas, ciudad){
 
 //prueba
 console.log(ventasPorCiudad(ventas, "medellín"));
+
+
+//funcion totalVendido con metodos
+const totalVendidoM = (ventas) => ventas.reduce((acum, v) => acum + valorVenta(v) ,0)
+ //prueba
+console.log("Total ventas" , totalVendidoM(ventas))
+
+//funcion unidadesVendidasM con metodos
+const unidadesVendidasM = (ventas) => ventas.reduce((acum, v)=> acum+v.cantidad , 0)
+//prueba
+console.log("Unidades vendidas", unidadesVendidasM(ventas))
+
+//funcion ventasPorCiudadM con metodos
+function ventasPorCiudadM (ventas, ciudad) {
+    return ventas.reduce((acum, v) => v.ciudad.trim().toLowerCase()===ciudad.trim().toLowerCase() ? acum + valorVenta(v): acum , 0)
+}
+//prueba
+console.log(ventasPorCiudadM(ventas, "Medellín"));
+
+
+// funcion ventas totales por ciudad 
+function totalPorCiudad (ventas) {
+    return ventas.reduce((grupos, v) => {
+        const clave=v.ciudad.trim().toLowerCase();
+        grupos[clave]=(grupos[clave] || 0 ) + valorVenta(v);
+        return grupos;
+    },{});
+}
+//prueba
+console.log(totalPorCiudad (ventas));
+
+
+//funcion cantidad de unidades vendidas por producto
+function unidadesPorProducto (ventas) {
+    return ventas.reduce((grupo, v)=>{
+        grupo[v.producto]=(grupo[v.producto] || 0) + v.cantidad;
+        return grupo;
+    },{});
+}
+console.log(unidadesPorProducto (ventas));
+
+
+// funcion top k en ventas
+function topProductosPorValor(ventas, k){
+    const porProducto = ventas.reduce ((grupo,v)=>{
+        grupo[v.producto]=(grupo[v.producto] || 0 ) + valorVenta(v);
+        return grupo;
+    },{});
+    return Object.entries(porProducto)
+    .sort((a,b) => b[1] - a[1])
+    .slice(0, k);
+}
+console.log(topProductosPorValor(ventas, 3));
+
+
+module.exports = {
+  totalVendido,
+  totalVendidoM,
+  unidadesVendidas,
+  unidadesVendidasM,
+  ventaMayor,
+  ticketPromedio,
+  ventasPorCiudad,
+  ventasPorCiudadM
+};

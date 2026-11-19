@@ -25,30 +25,34 @@ Clientes: hay clientes con varias ventas       | Es válido
 
 ## Reto 2: los numeros del dia
 
-### Plan indicador - pseudocodigo
+### Punto 1: Plan indicador - pseudocodigo
 
-1. cuánto se vendió en total:
+#### 1. total Vendido:
 -Que recorre:el arreglo de ventas
 -Que condicion aplico: ninguna, todas se suman
 -Que acumulo: la nueva constante valorVenta( cantidad * precio) 
 -Con que valor inicio: totalVentas=0
-2. cuántas unidades salieron:
+
+
+#### 2.  cuántas unidades salieron:
 -Que recorre: el arreglo de ventas
 -Que condicion aplico: ninguna, todas se suman
 -Que acumulo: la propiedad cantidad
 -Con que valor inicio: unidades=0
-3. cuál fue la venta más grande:
+
+#### 3. cuál fue la venta más grande:
 -Que recorre: el arreglo de ventas
 -Que condicion aplico: tengo un pibote (mayor) y voy comparando cada valor venta con ese valor y si es mayor reemplazo ese pibote
 -Que acumulo: no se acumula solo se compara
 -Con que valor inicio: como se devuelve todo el objeto arranco pretendiento que la posicion cero es el mayor. mayor=ventas[0]
-4. cuánto gasta en promedio un cliente por compra (el ticket promedio):
+
+#### 4. cuánto gasta en promedio un cliente por compra (el ticket promedio):
 -Que recorre: el arreglo de ventas
 -Que condicion aplico: venta valida, cantidad >0
 -Que acumulo:se reuntiliza totalVenta y se divide por el total de ventas validas
 -Con que valor inicio: desde la posicion 0
 
-### Prueba entradas 
+### Punto 6: Prueba entradas 
 
 **Caso Arreglo vacio**:
 **totalVendido** = debe devolver cero, al no haber ventas que sumar
@@ -57,9 +61,9 @@ Clientes: hay clientes con varias ventas       | Es válido
 **ticketPromedio** = debe devolver cero, al no haber ventas que promediar
 **ventasPorCiudad** = debe devolver cero, al no haber ventas que sumar
 
-### Tabla de trazas
+### Punto 7 - Tablas de trazas
 
-## Tabla de Trazas: `ticketPromedio(ventas)`
+#### Tabla de Trazas: `ticketPromedio(ventas)`
 
 | Iteración (`id`) | `cantidad` | `precio` | ¿`v.cantidad > 0`? | `valorVenta(v)` | `total`  | `validas` |
 | :--------------- | :--------- | :------- | :----------------- | :-------------- | :------- | :---------|
@@ -77,13 +81,9 @@ Clientes: hay clientes con varias ventas       | Es válido
 | `11`             | `1`        | `95000`  | ✅ Sí (`true`)     | `95000`         | `907000` | `10`      |
 | `12`             | `3`        | `26000`  | ✅ Sí (`true`)     | `78000`         | `985000` | `11`      |
 
-### Cálculo Final (Retorno)
-* **`total` final:** `$985.000`
-* **`validas` final:** `11` *(el registro `id: 8` fue excluido por tener `cantidad: 0`)*
-* **Resultado (`985000 / 11`):** **`89545.45`** *(aproximadamente `$89.545,45`)*
 
 
-## Tabla de Trazas: `ventasPorCiudad(ventas, "Medellín")`
+#### Tabla de Trazas: `ventasPorCiudad(ventas, "Medellín")`
 
 * **Valor buscado normalizado (`buscada`):** `"medellín"`
 
@@ -103,6 +103,57 @@ Clientes: hay clientes con varias ventas       | Es válido
 | `11`             | `"Medellín"`          | `"medellín"` | ✅ Sí (`true`)           | `95000`         | `356000`            |
 | `12`             | `"Bogotá "`           | `"bogotá"`   | ❌ No (`false`)          | *(Se omite)*    | `356000`            |
 
-### Resultado Final (Retorno)
-* **Registros que sumaron:** `id: 1` ($84.000), `id: 4` ($42.000), `id: 5` ($135.000) e `id: 11` ($95.000).
-* **`total` devuelto:** **`356000`** (`$356.000`).
+
+
+## Reto 3:  Del ciclo al metodo
+
+### 6. Análisis Funcional por Método
+
+#### 1. `totalVendidoM(ventas)`
+* **¿Qué recorro?** El arreglo completo `ventas` usando `.reduce()`.
+* **¿Qué filtro?** Ningún elemento; se procesan todos los registros.
+* **¿Qué transformo?** Cada objeto de venta `v` en su valor monetario llamando a la función auxiliar `valorVenta(v)` (`v.cantidad * v.precio`).
+* **¿Qué acumulo?** En el acumulador `acum` (inicializado en `0`) se va sumando el dinero de cada venta hasta obtener el gran total (`$985.000`).
+* **¿Cómo agrupo?** No aplica (reduce todo el arreglo a un único valor numérico).
+
+#### 2. `unidadesVendidasM(ventas)`
+* **¿Qué recorro?** El arreglo completo `ventas` usando `.reduce()`.
+* **¿Qué filtro?** Ningún elemento; se recorren todas las transacciones.
+* **¿Qué transformo?** De cada objeto `v` se extrae únicamente su propiedad numérica `v.cantidad`.
+* **¿Qué acumulo?** En `acum` (inicializado en `0`) se suman las unidades de cada registro para obtener el total de productos vendidos (`21` unidades).
+* **¿Cómo agrupo?** No aplica (reduce el arreglo a un único número entero).
+
+#### 3. `ventasPorCiudadM(ventas, ciudad)`
+* **¿Qué recorro?** El arreglo completo `ventas` usando `.reduce()`.
+* **¿Qué filtro?** Se filtran únicamente los registros cuya propiedad `v.ciudad` (normalizada con `.trim().toLowerCase()`) coincida exactamente con la `ciudad` buscada también normalizada.
+* **¿Qué transformo?** El texto de entrada `ciudad` y cada `v.ciudad` a minúsculas sin espacios laterales, y cada venta coincidente a su valor monetario mediante `valorVenta(v)`.
+* **¿Qué acumulo?** En `acum` (inicializado en `0`) se suma `valorVenta(v)` únicamente cuando la ciudad coincide; de lo contrario, se conserva el acumulado sin cambios (`: acum`).
+* **¿Cómo agrupo?** No devuelve un objeto agrupado general, sino que filtra y acumula el total para una ciudad específica.
+
+#### 4. `totalPorCiudad(ventas)`
+* **¿Qué recorro?** El arreglo completo `ventas` utilizando `.reduce()`.
+* **¿Qué filtro?** Ningún registro; todos entran en la clasificación.
+* **¿Qué transformo?**
+  * Cada nombre de ciudad se normaliza mediante `v.ciudad.trim().toLowerCase()` para unificar variaciones de escritura (ej. `"Bogotá"` y `"Bogotá "` quedan bajo la misma clave `"bogotá"`, y `"Medellín"` con `"medellín"` bajo `"medellín"`).
+  * Cada registro `v` se transforma en su valor monetario con `valorVenta(v)`.
+* **¿Qué acumulo?** Dentro de cada clave de ciudad en el objeto acumulador, se suma el valor de la venta actual al subtotal previo (`(grupos[clave] || 0) + valorVenta(v)`).
+* **¿Cómo agrupo?** Se utiliza un objeto vacío `{}` como acumulador inicial (`grupos`), creando dinámicamente una propiedad por cada ciudad normalizada (`{ medellín: 356000, bogotá: 276000, cali: 185000, pereira: 168000 }`).
+
+#### 5. `unidadesPorProducto(ventas)`
+* **¿Qué recorro?** El arreglo completo `ventas` usando `.reduce()`.
+* **¿Qué filtro?** Ningún elemento; se consideran todos los registros del arreglo.
+* **¿Qué transformo?** De cada venta `v` se extrae su nombre (`v.producto`) como clave y su cantidad (`v.cantidad`) como valor numérico a sumar.
+* **¿Qué acumulo?** En cada propiedad del objeto acumulador se van sumando las unidades vendidas de ese producto (`(grupo[v.producto] || 0) + v.cantidad`).
+* **¿Cómo agrupo?** Mediante un objeto vacío `{}` (`grupo`), usando el nombre exacto del producto (`v.producto`) como clave única.
+
+#### 6. `topProductosPorValor(ventas, k)`
+* **¿Qué recorro?**
+  1. Primero el arreglo `ventas` con `.reduce()` para consolidar ingresos por producto.
+  2. Luego el arreglo de parejas `[producto, total]` generado por `Object.entries(porProducto)` usando `.sort()`, `.slice()` y `.map()`.
+* **¿Qué filtro?** Mediante `.slice(0, k)` se recortan y conservan únicamente los primeros `k` elementos (el Top `k`) después de ordenar.
+* **¿Qué transformo?**
+  1. Cada venta `v` en su valor monetario `valorVenta(v)`.
+  2. El objeto agrupado `porProducto` en un arreglo de pares `[producto, total]` con `Object.entries()` para poder aplicar `.sort()` sin mutar el arreglo original `ventas`.
+  3. Cada pareja ganadora `[producto, total]` en únicamente el texto del nombre del producto usando desestructuración en `.map(([producto]) => producto)`.
+* **¿Qué acumulo?** Durante el `.reduce()` inicial, se acumula el dinero total generado por cada producto en el objeto `porProducto`.
+* **¿Cómo agrupo?** Se agrupa inicialmente en un objeto `{}` usando `v.producto` como clave, antes de convertirlo a arreglo para ordenarlo de mayor a menor (`(a, b) => b[1] - a[1]`).
