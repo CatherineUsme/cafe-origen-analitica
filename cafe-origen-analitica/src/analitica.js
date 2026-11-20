@@ -14,8 +14,8 @@ function totalVendido(ventas){
 }
 
 //prueba
-const resultado = totalVendido(ventas);
-console.log("Total vendido:", resultado);
+//const resultado = totalVendido(ventas);
+//console.log("Total vendido:", resultado);
 
 //funcion unidadesVendidas
 function unidadesVendidas(ventas){
@@ -27,8 +27,8 @@ function unidadesVendidas(ventas){
 }
 
 //prueba
-const unidadesVdas = unidadesVendidas(ventas);
-console.log("Unidades vendidas:", unidadesVdas);
+//const unidadesVdas = unidadesVendidas(ventas);
+//console.log("Unidades vendidas:", unidadesVdas);
 
 
 //funcion ventaMayor
@@ -41,7 +41,7 @@ function ventaMayor (ventas) {
     return mayor;
 }
 //prueba
-console.log(ventaMayor(ventas));
+//console.log(ventaMayor(ventas));
 
 
 //funcion ticketPromedio
@@ -58,7 +58,7 @@ function ticketPromedio (ventas){
 }
 
 //prueba
-console.log(ticketPromedio(ventas));
+//console.log(ticketPromedio(ventas));
 
 //funcion ventasPorCiudad
 function ventasPorCiudad(ventas, ciudad){
@@ -73,25 +73,25 @@ function ventasPorCiudad(ventas, ciudad){
 }
 
 //prueba
-console.log(ventasPorCiudad(ventas, "medellín"));
+//console.log(ventasPorCiudad(ventas, "medellín"));
 
 
 //funcion totalVendido con metodos
 const totalVendidoM = (ventas) => ventas.reduce((acum, v) => acum + valorVenta(v) ,0)
  //prueba
-console.log("Total ventas" , totalVendidoM(ventas))
+//console.log("Total ventas" , totalVendidoM(ventas))
 
 //funcion unidadesVendidasM con metodos
 const unidadesVendidasM = (ventas) => ventas.reduce((acum, v)=> acum+v.cantidad , 0)
 //prueba
-console.log("Unidades vendidas", unidadesVendidasM(ventas))
+//console.log("Unidades vendidas", unidadesVendidasM(ventas))
 
 //funcion ventasPorCiudadM con metodos
 function ventasPorCiudadM (ventas, ciudad) {
     return ventas.reduce((acum, v) => v.ciudad.trim().toLowerCase()===ciudad.trim().toLowerCase() ? acum + valorVenta(v): acum , 0)
 }
 //prueba
-console.log(ventasPorCiudadM(ventas, "Medellín"));
+//console.log(ventasPorCiudadM(ventas, "Medellín"));
 
 
 // funcion ventas totales por ciudad 
@@ -103,7 +103,7 @@ function totalPorCiudad (ventas) {
     },{});
 }
 //prueba
-console.log(totalPorCiudad (ventas));
+//console.log(totalPorCiudad (ventas));
 
 
 //funcion cantidad de unidades vendidas por producto
@@ -113,7 +113,7 @@ function unidadesPorProducto (ventas) {
         return grupo;
     },{});
 }
-console.log(unidadesPorProducto (ventas));
+//console.log(unidadesPorProducto (ventas));
 
 
 // funcion top k en ventas
@@ -126,7 +126,14 @@ function topProductosPorValor(ventas, k){
     .sort((a,b) => b[1] - a[1])
     .slice(0, k);
 }
-console.log(topProductosPorValor(ventas, 3));
+//console.log(topProductosPorValor(ventas, 3));
+
+function ventasDelDia(ventas, fecha){
+    return ventas.reduce((acum,v)=> v.fecha===fecha ? acum + valorVenta(v) : acum  ,0)
+}
+console.log(ventasDelDia(ventas, "2026-09-07"));
+
+
 
 
 module.exports = {
@@ -137,5 +144,9 @@ module.exports = {
   ventaMayor,
   ticketPromedio,
   ventasPorCiudad,
-  ventasPorCiudadM
+  ventasPorCiudadM,
+  totalPorCiudad,
+  topProductosPorValor,
+  unidadesPorProducto,
+  ventasDelDia
 };
