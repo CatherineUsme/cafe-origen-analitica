@@ -10,7 +10,6 @@ El sistema toma un conjunto de transacciones comerciales (con fecha, cliente, pr
 
 ## Estructura del Proyecto
 
-```text
 cafe-origen-analitica/
 ├── src/
 │   ├── datos.js       # Arreglo con los registros históricos de ventas
@@ -20,3 +19,22 @@ cafe-origen-analitica/
 │   └── reporte.js     # Generador del informe ejecutivo alineado en consola
 ├── bitacora.md        # Documentación técnica, trazas y registro de depuración
 └── README.md          # Documentación general del proyecto
+
+## Ejecución con botón Play en VS Code 
+
+    Si tienes instalada la extensión Code Runner en Visual Studio Code:
+        Abre el archivo que deseas ejecutar (src/reporte.js).
+        Verifica que no tengas ningún fragmento de texto seleccionado en el editor (de lo contrario, Code Runner ejecutará solo esa línea aislada en un archivo temporal).
+        Haz clic en el ícono de Play (▶) en la esquina superior derecha de VS Code.
+
+## ¿Qué preguntas de negocio responde?
+
+El proyecto transforma los datos crudos de facturación en respuestas claras para la toma de decisiones comerciales:
+    ¿Cuánto dinero ingresó en total? (Ingresos brutos acumulados).
+    ¿Cuántas unidades o bolsas de café se vendieron en total? (Volumen físico despachado).
+    ¿Cuál fue la transacción individual de mayor valor y qué producto la generó?
+    ¿Cuál es el valor promedio de compra por venta efectiva (ticket promedio)? (Excluyendo registros anulados o con cantidad 0).
+    ¿Cuánto se vendió en una ciudad específica y cómo se distribuyen los ingresos entre todas las ciudades?
+    ¿Cuántas unidades se vendieron de cada referencia de producto?
+    ¿Cuáles son los 3 productos que más ingresos generaron (Top 3 por valor)?
+    ¿Cuánto se vendió en un día específico (por ejemplo, durante los primeros 8 días de septiembre)?
