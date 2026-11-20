@@ -20,12 +20,25 @@ cafe-origen-analitica/
 ├── bitacora.md        # Documentación técnica, trazas y registro de depuración
 └── README.md          # Documentación general del proyecto
 
+
+## Ejecución desde la terminal (Recomendado)
+
+    1. Abre la carpeta raíz del proyecto (cafe-origen-analitica) en Visual Studio Code.
+    2. Abre la terminal integrada con el atajo Ctrl + ñ (teclado en español) o Ctrl +  `, o desde el menú superior en Terminal > Nueva terminal.
+    3. Asegúrate de estar ubicado en la raíz del proyecto y ejecuta el script que desees:
+        Generar el reporte ejecutivo completo en consola:
+            node src/reporte.js
+        Ejecutar las pruebas de verificación cruzada (OK / DIFERENTE):
+            node src/verificar.js
+        Ejecutar la exploración inicial y auditoría de datos:
+            node src/explorar.js
+
 ## Ejecución con botón Play en VS Code 
 
-    Si tienes instalada la extensión Code Runner en Visual Studio Code:
-        Abre el archivo que deseas ejecutar (src/reporte.js).
-        Verifica que no tengas ningún fragmento de texto seleccionado en el editor (de lo contrario, Code Runner ejecutará solo esa línea aislada en un archivo temporal).
-        Haz clic en el ícono de Play (▶) en la esquina superior derecha de VS Code.
+    1. Si tienes instalada la extensión Code Runner en Visual Studio Code:
+    2. Abre el archivo que deseas ejecutar (src/reporte.js).
+    3 .Verifica que no tengas ningún fragmento de texto seleccionado en el editor (de lo contrario, Code Runner ejecutará solo esa línea aislada en un archivo temporal).
+    4. Haz clic en el ícono de Play (▶) en la esquina superior derecha de VS Code.
 
 ## ¿Qué preguntas de negocio responde?
 
