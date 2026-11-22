@@ -4,7 +4,7 @@ const {generarVentas} = require("./generador");
 const muestra = [100, 1000, 10000, 100000];
 const resultados = [];
 
-for (const n of muestra){
+/* for (const n of muestra){
     const lote = generarVentas(n);
     const c1={ops:0};
     const c2={ops:0};
@@ -24,4 +24,13 @@ for (const n of muestra){
     })
 }
 
-console.table(resultados)
+console.table(resultados)*/
+
+const muestraRecurrentes=[1000, 2000, 4000, 8000, 16000,100000]
+
+for (const n of muestraRecurrentes){
+    const lote = generarVentas(n);
+    console.time(`n=${n}`);
+    analitica.clientesRecurrentes(lote);
+    console.timeEnd(`n=${n}`);
+}

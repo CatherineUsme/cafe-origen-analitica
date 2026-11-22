@@ -238,3 +238,60 @@ En esta etapa se construyó un generador de datos sintéticos (`src/generador.js
 **Complejidad Lineal — O(n) (`totalVendido`, `ventaMayor`, `totalPorCiudad`):** El trabajo crece de manera directamente proporcional al tamaño de los datos `n`:
   * `totalVendido` realiza 1n operaciones (1 visita por elemento).
   * `ventaMayor` y `totalPorCiudad` realizan 2n operaciones (1 visita más 1 comparación por elemento). Aunque tienen un factor constante de `2`, en notación Big O ambas pertenecen a la misma clase de crecimiento lineal O(n) por simplificacion.
+
+
+## Reto 6: el reporte se volvio lento
+
+### Punto 2: Traza clientesRecurrentes
+
+## Traza de `clientesRecurrentes(ventas)` (Muestra de 5 ventas)
+
+**Entrada de prueba:** `["C01", "C02", "C03", "C01", "C04"]` 
+
+| Vuelta (`i`) | Cliente `i` | Vuelta (`j`) | Cliente `j` | ¿Iguales? | ¿Nuevo? | Arreglo `recurrentes` | Comp. vuelta |
+| :----------- | :---------- | :----------- | :---------- | :-------- | :------ | :-------------------- | :----------- |
+| **`i = 0`**  | `"C01"`     | `j = 1`      | `"C02"`     | No        | —       | `[]`                  | `1`          |
+|              |             | `j = 2`      | `"C03"`     | No        | —       | `[]`                  | `2`          |
+|              |             | `j = 3`      | `"C01"`     | Sí        | Sí      | `["C01"]`             | `3`          |
+|              |             | `j = 4`      | `"C04"`     | No        | —       | `["C01"]`             | `4`          |
+| **`i = 1`**  | `"C02"`     | `j = 2`      | `"C03"`     | No        | —       | `["C01"]`             | `1` (`5`)    |
+|              |             | `j = 3`      | `"C01"`     | No        | —       | `["C01"]`             | `2` (`6`)    |
+|              |             | `j = 4`      | `"C04"`     | No        | —       | `["C01"]`             | `3` (`7`)    |
+| **`i = 2`**  | `"C03"`     | `j = 3`      | `"C01"`     | No        | —       | `["C01"]`             | `1` (`8`)    |
+|              |             | `j = 4`      | `"C04"`     | No        | —       | `["C01"]`             | `2` (`9`)    |
+| **`i = 3`**  | `"C01"`     | `j = 4`      | `"C04"`     | No        | —       | `["C01"]`             | `1` (`10`)   |
+| **`i = 4`**  | `"C04"`     | *(Fin)*      | —           | —         | —       | `["C01"]`             | `0` (`10`)   |
+
+Generalización Matemática
+**Total con 5 ventas:** 4 + 3 + 2 + 1 + 0 = 10 comparaciones
+**Fórmula para `n` ventas:** (n*(n - 1)) /2, lo que corresponde a una complejidad cuadrática O(n^2).
+
+### Punto 4: tiempo de ejecucion
+
+n=1000: 4.681ms 
+n=2000: 12.909ms
+n=4000: 47.517ms
+n=8000: 199.74ms
+n=16000: 782.371ms
+
+El tiempo sigue como indica la complejidad un comportamiento cuadratico, es decir en este caso donde se duplican las ventas (2n), el tiempo se multiplica por 2^2=4, por eso pasa de 47.5 ms a 199.74ms y sucesivamente
+
+### Punto 5: estimaciones con 100.000 y 1.000.000 ventas
+ 
+ **Con 100.000 ventas** 
+   -(100.000 / 16.000 = 6,25) el lote es 6,25 veces mas grande que 16.000 ventas
+   -(6,25^2=39,06) por tanto el tiempo de 16.000 se debe multiplicar por 39,06
+   -(0,782s * 39,06 =30,5 s) pase el tiempo a segundos y dio como resultado 30,5 segundos para el lote de 100.000 ventas
+   -tiempo real de ejecucion: n=100000: 1:04.116 (m:ss.mmm) se explica por includes
+
+ 
+ **Con 1.000.000 ventas** 
+   -(1.000.000 / 100.000 = 10) el lote es 10 veces mas grande que 100.000 ventas
+   -(10^2=100) por tanto el tiempo de 100.000 se debe multiplicar por 10
+   -(30,5s * 100 =3.050s aprox 50,8 minutos) se demora casi un hora calculando el lote de 1.000.000
+
+### Punto 6: costo oculto de includes
+Dentro de los dos ciclos anidados O(n^2), la función ejecuta `!recurrentes.includes(ventas[i].cliente)` cada vez que encuentra una coincidencia. El método `.includes()` realiza una búsqueda secuencial recorriendo el arreglo `recurrentes` elemento por elemento. En un escenario donde existan miles de clientes distintos recurrentes, esa búsqueda interna añade un tercer recorrido lineal O(n) dentro de los dos ciclos, llevando la complejidad del peor caso hasta O(n^3).
+
+### Punto 7: Conclusion ejecutiva para la genrencia
+El reporte se vuelve tan lento porque el sistema está revisando las facturas comparando **cada venta contra todas las demás ventas del historial, una por una**. Con una muestra pequeña de mil ventas esto toma apenas unos milisegundos, pero con un historial de cien mil o un millón de ventas, la primera factura se compara contra las 999.999 restantes, la segunda contra 999.998, y así sucesivamente hasta realizar cientos de miles de millones de revisiones repetidas, haciendo que el reporte tarde más de una hora en responder.
