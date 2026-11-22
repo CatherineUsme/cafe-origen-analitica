@@ -135,18 +135,58 @@ console.log(ventasDelDia(ventas, "2026-09-07"));
 
 
 
+//funciones instrumentadas
+function totalVendidoInstrumentada(ventas, contador){
+    let total = 0;
+    for (const v of ventas){
+        contador.ops++;
+        total += valorVenta(v);
+    } 
+    return total;
+}
+
+function ventaMayorInstrumentada (ventas, contador) {
+    if(ventas.length===0) return null;
+    let mayor = ventas[0];
+    for (const v of ventas){
+        contador.ops++; //contador visita
+        contador.ops++; //contador comparacion
+        if (valorVenta(v) > valorVenta(mayor)) mayor = v;
+    }
+    return mayor;
+}
+
+function totalPorCiudadInstrumentada (ventas, contador) {
+    return ventas.reduce((grupos, v) => {
+        const clave=v.ciudad.trim().toLowerCase();
+        grupos[clave]=(grupos[clave] || 0 ) + valorVenta(v);
+        contador.ops++; //contador visita
+        return grupos;
+    },{});
+}
+
+function primeraVentaInstrumentada (ventas, contador){
+    if(ventas.length===0) return null;
+    contador.ops++;
+    return ventas[0];
+}
+
 
 module.exports = {
-  totalVendido,
-  totalVendidoM,
-  unidadesVendidas,
-  unidadesVendidasM,
-  ventaMayor,
-  ticketPromedio,
-  ventasPorCiudad,
-  ventasPorCiudadM,
-  totalPorCiudad,
-  topProductosPorValor,
-  unidadesPorProducto,
-  ventasDelDia
+    totalVendido,
+    totalVendidoM,
+    unidadesVendidas,
+    unidadesVendidasM,
+    ventaMayor,
+    ticketPromedio,
+    ventasPorCiudad,
+    ventasPorCiudadM,
+    totalPorCiudad,
+    topProductosPorValor,
+    unidadesPorProducto,
+    ventasDelDia,
+    totalVendidoInstrumentada,
+    ventaMayorInstrumentada,
+    totalPorCiudadInstrumentada,
+    primeraVentaInstrumentada
 };

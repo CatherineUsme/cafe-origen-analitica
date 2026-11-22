@@ -184,3 +184,57 @@
     Se ejecutó nuestra implementación actual ticketPromedio(ventas) con dos escenarios borde: un arreglo vacío [] y un arreglo con una venta de cantidad cero [{ cantidad: 0, precio: 42000 }].
 **Causa:** Falta de validación previa para evitar la división entre cero cuando el contador validas es igual a 0.
 **Corrección:** Se incorporó una validación explícita antes de realizar la división en ticketPromedio(ventas), asegurando que si validas === 0 la función retorne 0 directamente.
+
+
+
+## Reto 5: ¿cuanto cuesta cada reporte?
+
+### Punto 3: predicciones
+n=10
+**totalVendido** serian 10 operaciones porque solo hay visitas
+**ventaMayor** serian 20 operaciones, hay una visita mas una comparacion
+**totalPorCiudad** serian 20 operaciones, hay una visita mas una comparacion
+
+### Punto 4: Ejecucion medir.js
+┌─────────┬─────────┬──────────────┬────────────┬────────────────┐
+│ (index) │ tamLote │ totalVendido │ ventaMayor │ totalPorCiudad │
+├─────────┼─────────┼──────────────┼────────────┼────────────────┤
+│ 0       │ 100     │ 100          │ 200        │ 100            │
+│ 1       │ 1000    │ 1000         │ 2000       │ 1000           │
+│ 2       │ 10000   │ 10000        │ 20000      │ 10000          │
+│ 3       │ 100000  │ 100000       │ 200000     │ 100000         │
+└─────────┴─────────┴──────────────┴────────────┴────────────────┘
+
+###  Punto 5: funcion complejidad constante
+┌─────────┬─────────┬──────────────┬────────────┬────────────────┬──────────────┐
+│ (index) │ tamLote │ totalVendido │ ventaMayor │ totalPorCiudad │ primeraVenta │
+├─────────┼─────────┼──────────────┼────────────┼────────────────┼──────────────┤
+│ 0       │ 100     │ 100          │ 200        │ 100            │ 1            │
+│ 1       │ 1000    │ 1000         │ 2000       │ 1000           │ 1            │
+│ 2       │ 10000   │ 10000        │ 20000      │ 10000          │ 1            │
+│ 3       │ 100000  │ 100000       │ 200000     │ 100000         │ 1            │
+└─────────┴─────────┴──────────────┴────────────┴────────────────┴──────────────┘
+
+## 8. Análisis de Rendimiento y Complejidad Computacional (Big O)
+
+En esta etapa se construyó un generador de datos sintéticos (`src/generador.js`) y se instrumentaron las funciones de `src/analitica.js` para medir experimentalmente cómo crece el número de operaciones básicas cuando aumenta el volumen de ventas (`n`)[cite: 4].
+
+### 8.1. Predicción Inicial (Antes de Medir)
+* **Hipótesis:** Si el tamaño de entrada `n` se multiplica por 10, el número de operaciones de `totalVendido`, `ventaMayor` y `totalPorCiudad` también se multiplicará por **10**, ya que todas recorren el arreglo una sola vez de principio a fin sin ciclos anidados (crecimiento proporcional o lineal).
+* Por el contrario, una función sin ciclos que acceda directamente a una posición en memoria (`primeraVenta`) mantendrá siempre **1** operación sin importar cuánto crezca `n`.
+
+### 8.2. Resultados Experimentales (`node src/medir.js`)
+
+| Tamaño del lote (`n`) | `totalVendido` | `ventaMayor` | `totalPorCiudad` | `primeraVenta` |
+| :-------------------- | :------------- | :----------- | :--------------- | :------------- |
+| `100`                 | `100`          | `200`        | `200`            | `1`            |
+| `1.000`               | `1.000`        | `2.000`      | `2.000`          | `1`            |
+| `10.000`              | `10.000`       | `20.000`     | `20.000`         | `1`            |
+| `100.000`             | `100.000`      | `200.000`    | `200.000`        | `1`            |
+
+### Punto 6: clasificacion funciones
+
+**Complejidad Constante — O(1) (`primeraVenta`):** El número de operaciones permanece fijo en `1` independientemente de si el arreglo tiene `100` o `100.000` registros, debido a que accede directamente por índice (`ventas[0]`) sin recorrer la estructura.
+**Complejidad Lineal — O(n) (`totalVendido`, `ventaMayor`, `totalPorCiudad`):** El trabajo crece de manera directamente proporcional al tamaño de los datos `n`:
+  * `totalVendido` realiza 1n operaciones (1 visita por elemento).
+  * `ventaMayor` y `totalPorCiudad` realizan 2n operaciones (1 visita más 1 comparación por elemento). Aunque tienen un factor constante de `2`, en notación Big O ambas pertenecen a la misma clase de crecimiento lineal O(n) por simplificacion.
