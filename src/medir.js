@@ -28,9 +28,15 @@ console.table(resultados)*/
 
 const muestraRecurrentes=[1000, 2000, 4000, 8000, 16000,100000]
 
-for (const n of muestraRecurrentes){
+/*for (const n of muestraRecurrentes){
     const lote = generarVentas(n);
     console.time(`n=${n}`);
     analitica.clientesRecurrentes(lote);
     console.timeEnd(`n=${n}`);
-}
+}*/
+
+
+const lote=generarVentas(10000)
+const cadena=analitica.totalCiudadCadena(lote, "Medellín");
+const unaPasada=analitica.totalCiudadUnaPasada(lote, "Medellín");
+console.log(cadena===unaPasada ? "ok" : "diferente")

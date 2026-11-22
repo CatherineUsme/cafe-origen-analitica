@@ -82,7 +82,7 @@ const totalVendidoM = (ventas) => ventas.reduce((acum, v) => acum + valorVenta(v
 //console.log("Total ventas" , totalVendidoM(ventas))
 
 //funcion unidadesVendidasM con metodos
-const unidadesVendidasM = (ventas) => ventas.reduce((acum, v)=> acum+v.cantidad , 0)
+const unidadesVendidasM = (ventas) => ventas.reduce((acum, v)=> acum + v.cantidad , 0)
 //prueba
 //console.log("Unidades vendidas", unidadesVendidasM(ventas))
 
@@ -186,6 +186,28 @@ function clientesRecurrentes(ventas) {
 //prueba
 //console.log(clientesRecurrentes(ventas))
 
+function totalCiudadCadena(ventas, ciudad){
+    const buscada=ciudad.trim().toLowerCase();
+    return ventas
+    .map(v=> ( {...v, ciudad: v.ciudad.trim().toLowerCase()}))
+    .filter(v=> v.ciudad===buscada)
+    .map(v=>valorVenta(v))
+    .reduce((acum,v)=>acum+ v ,0)
+}
+
+function totalCiudadUnaPasada(ventas, ciudad){
+    const buscada=ciudad.trim().toLowerCase();
+    let total =0
+    for (const v of ventas){
+        if (v.ciudad.trim().toLowerCase()===buscada){
+            total +=valorVenta(v)
+        }
+    }
+    return total
+}
+
+
+
 
 module.exports = {
     totalVendido,
@@ -204,5 +226,7 @@ module.exports = {
     ventaMayorInstrumentada,
     totalPorCiudadInstrumentada,
     primeraVentaInstrumentada,
-    clientesRecurrentes
+    clientesRecurrentes,
+    totalCiudadCadena,
+    totalCiudadUnaPasada
 };

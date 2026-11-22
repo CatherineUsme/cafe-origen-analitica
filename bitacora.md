@@ -295,3 +295,49 @@ Dentro de los dos ciclos anidados O(n^2), la función ejecuta `!recurrentes.incl
 
 ### Punto 7: Conclusion ejecutiva para la genrencia
 El reporte se vuelve tan lento porque el sistema está revisando las facturas comparando **cada venta contra todas las demás ventas del historial, una por una**. Con una muestra pequeña de mil ventas esto toma apenas unos milisegundos, pero con un historial de cien mil o un millón de ventas, la primera factura se compara contra las 999.999 restantes, la segunda contra 999.998, y así sucesivamente hasta realizar cientos de miles de millones de revisiones repetidas, haciendo que el reporte tarde más de una hora en responder.
+
+
+
+## Reto 7: Tiempo, memoria y cadena de metodos
+
+## Punto 4: Análisis versiones
+
+| Métrica / Aspecto           | `totalCiudadCadena(ventas, ciudad)`         | `totalCiudadUnaPasada(ventas, ciudad)`         |
+| :-------------------------- | :------------------------------------------ | :--------------------------------------------- |
+| Implementación              | .map() -> .filter() -> .map() -> .reduce()  | Ciclo único `for...of` con acumulador numérico |
+| Igualdad(10.000 ventas)     | Coincide exactamente (`OK`)                 | Coincide exactamente (`OK`)                    |
+| Recorridos completos        | 4 recorridos                                | 1 recorrido                                    |
+| Arreglos nuevos creados     | 3 arreglos intermedios en memoria           | 0 arreglos intermedios                         |
+| Complejidad Temporal        | O(4n) = O(n) (Lineal)                       | O(n) (Lineal)                                  |
+| Complejidad Espacial        | O(n) (Memoria proporcional a los datos)     | O(1) (Memoria constante)                       |
+
+
+### Punto 5:  Simplificación de Constantes en Big O:
+
+Aunque `totalCiudadCadena` realiza cuatro recorridos sobre los datos (4n operaciones) y `totalCiudadUnaPasada` realiza únicamente uno (1n operaciones), ambas tienen complejidad temporal O(n) porque la notación Big O mide la tasa de crecimiento asintótica del algoritmo a medida que el volumen de datos n crece hacia el infinito, no el tiempo exacto en milisegundos.
+
+Según las reglas de simplificación de Big O, las constantes multiplicativas se eliminan: tanto 4n como 1n crecen en proporción directa (lineal) respecto al tamaño de entrada n. Sin embargo, en la práctica, eliminar esos recorridos redundantes reduce la carga de CPU y evita reservar memoria extra.
+
+### Punto 6: Clasificación Espacial de las Funciones de analitica.js
+
+|                  Función                 | Complejidad  | Justificación del Consumo de Memoria Adicional                                       |
+|                                          | Espacial     |                                                                                      |
+| :--------------------------------------- | :------------| :------------------------------------------------------------------------------------|
+| `totalVendido` / `totalVendidoM`         | O(1)         | Solo utiliza un acumulador numérico simple en memoria.                               |
+| `unidadesVendidas` / `unidadesVendidasM` | O(1)         | Solo utiliza un contador numérico entero.                                            |
+| `ventaMayor`                             | O(1)         | Solo guarda una referencia al objeto con mayor valor encontrado.                     |
+| `ticketPromedio`                         | O(1)         | Solo mantiene dos contadores numéricos (total y validas).                            |
+| `ventasPorCiudad` / `ventasPorCiudadM`   | O(1)         | Solo almacena el texto normalizado buscada y un acumulador numérico.                 |
+| `ventasDelDia`                           | O(1)         | Solo utiliza un acumulador numérico para el día consultado.                          |
+| `totalCiudadUnaPasada`                   | O(1)         | Recorre el arreglo original sin crear copias ni estructuras auxiliares.              |
+| `totalCiudadCadena`                      | O(n)         | 3 arreglos intermedios.                                                              |
+| `totalPorCiudad`                         | O(n)         | Crea un objeto agrupador con una clave por cada ciudad distinta                      |
+| `unidadesPorProducto`                    | O(n)         | Crea un objeto diccionario con una entrada por cada producto distinto                |
+| `topProductosPorValor`                   | O(n)         | Crea el objeto agrupador y un nuevo arreglo de parejas, antes de ordenar y recortar. |
+| `clientesRecurrentes`                    | O(n)         | Almacena un arreglo con identificadores de clientes.                                 |
+
+
+
+### Punto 7: Decision version
+
+Se decide conservar `totalCiudadUnaPasada` como la implementación oficial en el motor (`src/analitica.js`). Aunque la versión encadenada (`totalCiudadCadena`) resulta expresiva, la versión de una sola pasada ofrece una lectura igual de clara y directa con `for...of`, mientras que es más rápida en tiempo real y consume memoria constante O(1) al no instanciar arreglos intermedios, un factor crítico dado que el servidor del marketplace opera con recursos de memoria RAM limitados.
