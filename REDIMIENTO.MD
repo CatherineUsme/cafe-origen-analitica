@@ -4,9 +4,8 @@
 
 Todas las mediciones experimentales de esta tabla se ejecutaron sobre un lote sintético de `n = 10.000` registros de ventas generado por `src/generador.js`.
 
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------|
-|   Función            | Qué hace                        | Complejidad | Complejidad | Justificación (basada en el código)                            | Medición   |
-|                      |                                 | Temporal    | Espacial    |                                                                |            | 
+
+|     Función          |    Qué hace                     | C. Temporal | C. Espacial | Justificación (basada en el código)                            | Medición   | 
 | -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------|
 |   `totalVendido`     | Suma el ingreso total de todas  | O(n)        | O(1)        | Un único ciclo `for...of` que recorre los `n` registros sumando| 10.000 ops | 
 |                      | las ventas.                     |             |             | en un solo acumulador numérico `total` .                       |            |
@@ -146,4 +145,3 @@ Para reducir `clientesRecurrentes(ventas)` de O(n^2) / O(n^3) a O(n) (pasando de
   2. Extracción final lineal: Al terminar el recorrido único, se convierte el objeto con `Object.entries(conteoClientes)`, se filtran las parejas cuyo contador sea mayor a `1` (`([, compras]) => compras > 1`) y se extraen únicamente los códigos de cliente con `.map(([cliente]) => cliente)`.
 
   ## Observaciones
-  
