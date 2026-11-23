@@ -341,3 +341,4 @@ Según las reglas de simplificación de Big O, las constantes multiplicativas se
 ### Punto 7: Decision version
 
 Se decide conservar `totalCiudadUnaPasada` como la implementación oficial en el motor (`src/analitica.js`). Aunque la versión encadenada (`totalCiudadCadena`) resulta expresiva, la versión de una sola pasada ofrece una lectura igual de clara y directa con `for...of`, mientras que es más rápida en tiempo real y consume memoria constante O(1) al no instanciar arreglos intermedios, un factor crítico dado que el servidor del marketplace opera con recursos de memoria RAM limitados.
+
