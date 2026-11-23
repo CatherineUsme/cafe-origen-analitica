@@ -5,59 +5,23 @@
 Todas las mediciones experimentales de esta tabla se ejecutaron sobre un lote sintético de `n = 10.000` registros de ventas generado por `src/generador.js`.
 
 
-|     Función          |    Qué hace                     | C. Temporal | C. Espacial | Justificación (basada en el código)                            | Medición   | 
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------|
-|   `totalVendido`     | Suma el ingreso total de todas  | O(n)        | O(1)        | Un único ciclo `for...of` que recorre los `n` registros sumando| 10.000 ops | 
-|                      | las ventas.                     |             |             | en un solo acumulador numérico `total` .                       |            |
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------|
-|   `totalVendidoM`    | Suma el ingreso total usando    | O(n)        | O(1)        | `.reduce()` realiza un único recorrido lineal sobre `ventas`   | 0.359 ms   |
-|                      | `.reduce()`.                    |             |             | manteniendo únicamente un acumulador numérico escalar (`acum`).|            | 
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------| 
-|   `unidadesVendidas` | Suma la cantidad de unidades    | O(n)        | O(1)        | Un único ciclo `for...of` que lee `v.cantidad` en cada registro| 0.565 ms   |
-|                      | vendidas.                       |             |             | y acumula en una variable entera `total`.                      |            | 
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------| 
-|   `unidadesVendidasM`| Suma el total de unidades usando| O(n)        | O(1)        | `.reduce()` recorre `ventas` una sola vez acumulando enteros en| 0.260 ms   | 
-|                      | `.reduce()`.                    |             |             | `acum` sin instanciar estructuras en memoria.                  |            |  
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------|
-|   `ventaMayor`       | Encuentra y devuelve el objeto  | O(n)        | O(1)        | Un único ciclo `for...of` que compara `valorVenta(v)` contra   |  20.000 ops|
-|                      | de la venta de mayor valor.     |             |             | valorVenta(mayor) y guarda solo una referencia al  ganador.    |            |
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------|
-|   `ticketPromedio`   | Calcula el valor promedio de    | O(n)        | O(1)        | Un único recorrido `for...of`con una condición (v.cantidad > 0)| 0.585 ms   |
-|                      |compra de las ventas válidas     |             |             | y dos contadores escalares (`total` y`validas`).               |            |    
-|                      |(`cantidad > 0`).                |             |             |                                                                |            |
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------|
-|   `ventasPorCiudad`  | Calcula el ingreso total de una | O(n)        | O(1)        | Normaliza `buscada` una vez fuera del ciclo y recorre `ventas` | ~0.585 ms  |
-|                      |ciudad específica (con ciclo).   |             |             | con un único `for...of` sumando en un acumulador numérico.     |            |
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------|
-|   `ventasPorCiudadM` | Calcula el ingreso total de una | O(n)        | O(1)        | Un único recorrido lineal con `.reduce()` y operador ternario  |   3.045 ms |
-|                      |ciudad específica usando reduce()|             |             | sobre un acumulador numérico sin crear arreglos intermedios.   |            | 
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------|
-|   `totalPorCiudad`   | Agrupa las ventas por ciudad    | O(n)        | O(n) O O(k) | Un único `.reduce()` recorre los `n` registros (O(n) en tiempo)| 10.000 ops |
-|                      | y suma el dinero de cada una.   |             |             | Crea un objeto diccionario con una clave por cada ciudad única | 1.595 ms   |
-|                      |                                 |             |             | (k); en el peor caso escala como O(n).                         |            |
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------|
-| `unidadesPorProducto`|Agrupa los registros por producto| O(n)        | O(n)o O(k)  | Un único reduce() recorre los `n` registros ($O(n)$) y almacena| 0.579 ms   |
-|                      |y suma las undades vendidas de   |             |             | las sumas en un objeto diccionario `{}` de $k$ productos       |            |
-|                      |cada uno.                        |             |             | distintos (peor caso $O(n)$).                                  |            |
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------|
-|`topProductosPorValor`| Devuelve los `k` productos que  | O(n\log n)  | O(n)o O(m)  | Agrupa en `porProducto` en O(n), convierte a arreglo con       | 0.573 ms   |
-|                      |más dinero generaron, ordenados  |             |             |Object.entries() (copia en memoria), ordena con sort() y recorta|            |
-|                      |de mayor a menor.                |             |             |con .slice(0, k). Si cada venta tuviera un producto distinto    |            |
-|                      |                                 |             |             |(m = n), escala a O(n \log n) en tiempo y $O(n) en espacio.     |            |
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------|
-| `ventasDelDia`       | Suma el dinero vendido en una   | O(n)        | O(1)        |Un único recorrido lineal con reduce() filtrando por igualdad de| 0.327 ms   |
-|                      | fecha especifica                |             |             |fecha sobre un acumulador numérico simple.                      |            |
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------|
-| `totalCiudadCadena`  | Calcula el total de una ciudad  | O(n)->(4n)  | O(n)        | Realiza 4 recorridos lineales secuenciales y crea 3 arreglos   | 1.534 ms   |
-|                      |encadenando map.filter.reduce.   |             |             | intermedios nuevos en memoria RAM en el camino.                |            |
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------|
-|`totalCiudadUnaPasada`|Calcula el total de una ciudad en| O(n) (1n)   | O(1)        | Un único ciclo `for...of` normaliza al vuelo y acumula en una  | 0.585 ms   |
-|                      |un solo recorrido.               |             |             | variable numérica `total`, creando 0 arreglos nuevos.          |            |
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------|
-| `clientesRecurrentes`|Identifica clientes que realizaro| O(n^2) peor | O(n)        | Dos ciclos `for` anidados comparan parejas. Además,            |  310.248 ms| 
-|                      |más de una compra en el historial| caso O(n^3) |             | !recurrentes.includes(...) realiza una búsqueda lineal interna |            | 
-|                      |                                 |             |             | en cada coincidencia (peor caso O(n^3))                        |            | 
-| -------------------- | --------------------------------| ------------| ------------| -------------------------------------------------------------- |------------|
+|Función | Qué hace | C. Temporal | C. Espacial | Justificación (basada en el código) | Medición |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `totalVendido` | Suma el ingreso total de todas las ventas. | O(n) | O(1) | Un único ciclo `for...of` que recorre los `n` registros sumando en un solo acumulador numérico `total` . | 10.000 ops |
+| `totalVendidoM` | Suma el ingreso total usando `.reduce()`. | O(n) | O(1) | `.reduce()` realiza un único recorrido lineal sobre `ventas` manteniendo únicamente un acumulador numérico escalar (`acum`). | 0.359 ms |
+| `unidadesVendidas` | Suma la cantidad de unidades vendidas. | O(n) | O(1) | Un único ciclo `for...of` que lee `v.cantidad` en cada registro y acumula en una variable entera `total`. | 0.565 ms |
+| `unidadesVendidasM` | Suma el total de unidades usando `.reduce()`. | O(n) | O(1) | `.reduce()` recorre `ventas` una sola vez acumulando enteros en `acum` sin instanciar estructuras en memoria. | 0.260 ms |
+| `ventaMayor` | Encuentra y devuelve el objeto de la venta de mayor valor. | O(n) | O(1) | Un único ciclo `for...of` que compara `valorVenta(v)` contra valorVenta(mayor) y guarda solo una referencia al ganador. | 20.000 ops |
+| `ticketPromedio` | Calcula el valor promedio de compra de las ventas válidas (`cantidad > 0`). | O(n) | O(1) | Un único recorrido `for...of`con una condición (v.cantidad > 0) y dos contadores escalares (`total` y`validas`). | 0.585 ms |
+| `ventasPorCiudad` | Calcula el ingreso total de una ciudad específica (con ciclo). | O(n) | O(1) | Normaliza `buscada` una vez fuera del ciclo y recorre `ventas` con un único `for...of` sumando en un acumulador numérico. | ~0.585 ms |
+| `ventasPorCiudadM` | Calcula el ingreso total de una ciudad específica usando reduce() | O(n) | O(1) | Un único recorrido lineal con `.reduce()` y operador ternario sobre un acumulador numérico sin crear arreglos intermedios. | 3.045 ms |
+| `totalPorCiudad` | Agrupa las ventas por ciudad y suma el dinero de cada una. | O(n) | O(n) O O(k) | Un único `.reduce()` recorre los `n` registros (O(n) en tiempo) Crea un objeto diccionario con una clave por cada ciudad única (k); en el peor caso escala como O(n). | 10.000 ops 1.595 ms |
+| `unidadesPorProducto` | Agrupa los registros por producto y suma las undades vendidas de cada uno. | O(n) | O(n)o O(k) | Un único reduce() recorre los `n` registros ($O(n)$) y almacena las sumas en un objeto diccionario `{}` de $k$ productos distintos (peor caso $O(n)$). | 0.579 ms |
+| `topProductosPorValor` | Devuelve los `k` productos que más dinero generaron, ordenados de mayor a menor. | O(n\log n) | O(n)o O(m) | Agrupa en `porProducto` en O(n), convierte a arreglo con Object.entries() (copia en memoria), ordena con sort() y recorta con .slice(0, k). Si cada venta tuviera un producto distinto (m = n), escala a O(n \log n) en tiempo y $O(n) en espacio. | 0.573 ms |
+| `ventasDelDia` | Suma el dinero vendido en una fecha especifica | O(n) | O(1) | Un único recorrido lineal con reduce() filtrando por igualdad de fecha sobre un acumulador numérico simple. | 0.327 ms |
+| `totalCiudadCadena` | Calcula el total de una ciudad encadenando map.filter.reduce. | O(n)->(4n) | O(n) | Realiza 4 recorridos lineales secuenciales y crea 3 arreglos intermedios nuevos en memoria RAM en el camino. | 1.534 ms |
+| `totalCiudadUnaPasada` | Calcula el total de una ciudad en un solo recorrido. | O(n) (1n) | O(1) | Un único ciclo `for...of` normaliza al vuelo y acumula en una variable numérica `total`, creando 0 arreglos nuevos. | 0.585 ms |
+| `clientesRecurrentes` | Identifica clientes que realizaro más de una compra en el historial | O(n^2) peor caso O(n^3) | O(n) | Dos ciclos `for` anidados comparan parejas. Además, !recurrentes.includes(...) realiza una búsqueda lineal interna en cada coincidencia (peor caso O(n^3)) | 310.248 ms |
  
 
 
@@ -66,40 +30,23 @@ Todas las mediciones experimentales de esta tabla se ejecutaron sobre un lote si
 Al escalar de 10.000 a 1.000.000 de registros, el tamaño de entrada n se multiplica por 100.
 Las proyecciones se calculan aplicando la tasa de crecimiento asintótica correspondiente a cada función:
 
-| --------------------- | -------------------- | ----------------------------- | -------------------------------------- |
 | **Función**           | Complejidad Temporal | Medición Real (10.000 ventas) | Proyección Estimada (1.000.000 ventas) |
 | --------------------- | -------------------- | ----------------------------- | -------------------------------------- |
 | `totalVendido`        | O(n)                 | `10.000 ops` (~`0.36 ms`)     | `1.000.000 ops` (~`35.9 ms`)           |
-| --------------------- | -------------------- | ----------------------------- | -------------------------------------- |
 | `totalVendidoM`       | O(n)                 | `0.359 ms`                    | `~35.9 ms` (`0.036 s`)                 | 
-| --------------------- | -------------------- | ----------------------------- | -------------------------------------- |              
 | `unidadesVendidas`    | O(n)                 | `0.565 ms`                    | `~56.5 ms` (`0.057 s`)                 |
-| --------------------- | -------------------- | ----------------------------- | -------------------------------------- |
 | `unidadesVendidasM`   | O(n)                 | `0.260 ms`                    | `~26.0 ms` (`0.026 s`)                 |
-| --------------------- | -------------------- | ----------------------------- | -------------------------------------- |
 | `ventaMayor`          | O(n)                 | `20.000 ops` (~`0.50 ms`)     | `2.000.000 ops` *(~`50.0 ms`)*         |
-| --------------------- | -------------------- | ----------------------------- | -------------------------------------- |
 | `ticketPromedio`      | O(n)                 | `0.585 ms`                    | `~58.5 ms` (`0.059 s`)                 |
-| --------------------- | -------------------- | ----------------------------- | -------------------------------------- |
 | `ventasPorCiudad`     | O(n)                 | `0.585 ms`                    | `~58.5 ms` (`0.059 s`)                 |
-| --------------------- | -------------------- | ----------------------------- | -------------------------------------- |
 | `ventasPorCiudadM`    | O(n)                 | `3.045 ms`                    | `~304.5 ms` (`0.305 s`)                |
-| --------------------- | -------------------- | ----------------------------- | -------------------------------------- |
 | `totalPorCiudad`      | O(n)                 | `1.595 ms` (`10.000 ops`)     | `~159.5 ms` (`0.160 s`)                |
-| --------------------- | -------------------- | ----------------------------- | -------------------------------------- |
 | `unidadesPorProducto` | O(n)                 | `0.579 ms`                    | `~57.9 ms` (`0.058 s`)                 |
-| --------------------- | -------------------- | ----------------------------- | -------------------------------------- |
 | `topProductosPorValor`| O(n \log n)          | `0.573 ms`                    | `~57.3 ms` a `~86.0 ms` (`< 0.1 s`)    |
-| --------------------- | -------------------- | ----------------------------- | -------------------------------------- |
 | `ventasDelDia`        | O(n)                 | `0.327 ms`                    | `~32.7 ms` (`0.033 s`)                 |
-| --------------------- | -------------------- | ----------------------------- | -------------------------------------- |
 | `totalCiudadCadena`   | O(n) (4n)            | `1.534 ms`                    | `~153.4 ms`(`0.153 s`) +alto uso de RAM|
-| --------------------- | -------------------- | ----------------------------- | -------------------------------------- |
 | `totalCiudadUnaPasada`| O(n) (1n)            | `0.585 ms`                    | `~58.5 ms` (`0.059 s`)                 |
-| --------------------- | -------------------- | ----------------------------- | -------------------------------------- |
-| `clientesRecurrentes` | O(n^2)               | `310.248 ms`                  | `~3.102.480 ms` (`~51.7 minutos`)      |
-|                       | peor caso $O(n^3)    |                               |  Factor=100^2=10.000                   |
-| --------------------- | -------------------- | ----------------------------- | -------------------------------------- |
+| `clientesRecurrentes` | O(n^2) peor caso $O(n^3)| `310.248 ms`                  | `~3.102.480 ms` (`~51.7 minutos`) Factor=100^2=10.000  |
 
 
 ## 3. Riesgos (De Mayor a Menor Riesgo al Crecer los Datos)
