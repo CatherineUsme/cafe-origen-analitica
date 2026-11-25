@@ -15,6 +15,10 @@ function azarEntre(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+const azar2 = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+console.log(azar2(1,5))
+
 function generarVentas(n) {
     const ventas = [];
     const maxCliente=Math.max(1, Math.floor(n/3));  //floor(n/3) redonde la division hacia abajo, y Math.max asegura que alla al menos 1
