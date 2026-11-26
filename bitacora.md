@@ -342,3 +342,21 @@ Según las reglas de simplificación de Big O, las constantes multiplicativas se
 
 Se decide conservar `totalCiudadUnaPasada` como la implementación oficial en el motor (`src/analitica.js`). Aunque la versión encadenada (`totalCiudadCadena`) resulta expresiva, la versión de una sola pasada ofrece una lectura igual de clara y directa con `for...of`, mientras que es más rápida en tiempo real y consume memoria constante O(1) al no instanciar arreglos intermedios, un factor crítico dado que el servidor del marketplace opera con recursos de memoria RAM limitados.
 
+## Reto 9
+
+### Punto 1: Metodo de la sesion 
+
+1. Entender:
+Entrada: arreglo ventas de objetos de transacción.
+Salida: Un arreglo de textos (string[]) con los códigos de los clientes que realizaron más de una compra (> 1), sin repetir códigos en el resultado.
+Restricciones: El marketplace exige responder en menos de 1 segundo con 100.000 ventas. No se debe mutar el arreglo original ventas.
+  
+2. Ejemplos y casos borde:
+Normal: ["C01", "C02", "C01", "C03", "C01"]["C01"] (aunque compró 3 veces, aparece 1 sola vez).
+Caso borde 1 (arreglo vacío []): => [].
+Caso borde 2 (1 sola venta ["C01"] o todos compran 1 sola vez): => [].
+Caso borde 3 (variaciones de escritura): " c01 " y "C01" deberían normalizarse con .trim().toUpperCase().
+
+3. Fuerza bruta y su complejidad:La versión original clientesRecurrentes usa dos ciclos for anidados más .includes() interno, lo que da O(n^2) en promedio y O(n^3) en el peor caso (tardó 64.1 s con 100.000, incumpliendo el límite de < 1 s).
+
+4. Idea de optimización:Eliminar el ciclo interno sustituyendo las búsquedas repetidas por estructuras con acceso promedio O(1): primero con dos Set (vistos y recurrentes) y luego con un Map de conteo de frecuencias (comprasPorCliente), logrando tiempo lineal O(n) a cambio de memoria adicional O(n).

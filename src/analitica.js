@@ -183,6 +183,7 @@ function clientesRecurrentes(ventas) {
   }
   return recurrentes;
 }
+
 //prueba
 //console.log(clientesRecurrentes(ventas))
 
@@ -206,8 +207,30 @@ function totalCiudadUnaPasada(ventas, ciudad){
     return total
 }
 
+function clientesRecurrentesSet(ventas){
+    const vistos = new Set();
+    const recurrentes = new Set();
+    for (const v of ventas){
+        if (vistos.has(v.cliente)) recurrentes.add(v.cliente);
+        else vistos.add(v.cliente);
+    }
+    return [... recurrentes]
 
+}
+//console.log(clientesRecurrentesSet(ventas))
 
+function comprasPorCliente(ventas){
+    const conteo = new Map();
+    for (const v of ventas){
+        const clave = v.cliente.trim().toLowerCase();
+        conteo.set(clave, (conteo.get(clave) || 0) +1 )
+    }
+    const recurrentes = [];
+    for (const [cliente, compras] of conteo){
+        if (compras > 1) recurrentes.push(cliente);
+    }
+    return recurrentes
+}
 
 module.exports = {
     totalVendido,
