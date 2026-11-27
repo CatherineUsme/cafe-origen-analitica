@@ -59,3 +59,28 @@ for( const valor of casosCombo){
   console.log(`Combo Regalo ${valor} : ${estado}`)
 }
 
+
+//verificacion mejorSemana Septiembre
+
+const ventasDiarias = [320, 410, 280, 390, 510, 620, 700, 300, 290, 450,
+480, 530, 610, 680, 350, 330, 420, 470, 560, 640,
+710, 380, 360, 440, 500, 590, 650, 720, 400, 370];
+
+const sepBruta = analitica.mejorSemanaBruta(ventasDiarias, 7);
+const sepVentana = analitica.mejorSemana(ventasDiarias, 7);
+const estadoSep = JSON.stringify(sepBruta) === JSON.stringify(sepVentana) ? "OK" : "DIFERENTE";
+console.log(`Mejor semana septiembre: ${estadoSep} ->`, sepVentana);
+
+//verificacion mejorSemana 100000 al azar
+const diasAzar = Array.from({ length: 100000 }, () => Math.floor(Math.random() * 601) + 200);
+
+console.time("Fuerza Bruta 100k días");
+const azarBruta = analitica.mejorSemanaBruta(diasAzar, 7);
+console.timeEnd("Fuerza Bruta 100k días");
+
+console.time("Ventana Deslizante 100k días");
+const azarVentana = analitica.mejorSemana(diasAzar, 7);
+console.timeEnd("Ventana Deslizante 100k días");
+
+const estadoAzar = JSON.stringify(azarBruta) === JSON.stringify(azarVentana) ? "OK" : "DIFERENTE";
+console.log(`Coincidencia 100.000 días: ${estadoAzar} ->`, azarVentana);

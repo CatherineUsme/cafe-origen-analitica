@@ -417,3 +417,46 @@ Aunque tanto `Set` como `Map` cumplen ampliamente con el límite de `< 1 s`, la 
 3. **Normalización y duplicados propios:**
     * En `comboRegaloMap`, la consulta `vistos.has(falta)` se ejecuta antes de `vistos.set(p.precio, p.producto)` para impedir que un producto que cueste exactamente la mitad del bono se empareje consigo mismo.
     * En `productoEstrellaPorCiudad`, `v.ciudad.trim().toLowerCase()` unifica variaciones de formato en ciudad.
+
+
+## Reto 11
+
+### Punto 1: mejorSemanaBruta
+**Estrategia utilizada:** Dos ciclos `for` anidados. El ciclo externo (`i`) recorre cada posible día de inicio válido desde `0` hasta `dias.length - k`, y por cada posición el ciclo interno (`j`) reinicia `sumaActual = 0` y vuelve a sumar los `k` días consecutivos desde cero (`j = i` hasta `i + k - 1`), comparando cada bloque contra `mejorSuma`.
+**Complejidad Temporal — O(n*k) (o O(n^2) en el peor caso cuando k = n):**
+Para un arreglo de n días y una ventana de tamaño k, el ciclo externo evalúa n - k + 1 ventanas posibles y el ciclo interno ejecuta exactamente k sumas en cada una, realizando (n - k + 1), k operaciones en total.
+**Complejidad Espacial — O(1) (Constante):**
+No crea arreglos intermedios ni estructuras auxiliares cuyo tamaño dependa de la entrada; únicamente utiliza variables numéricas escalares y retorna un objeto fijo de dos valores.
+
+### Punto 3: Dibujo ventana deslizable
+
+`ventasDiarias`= `[320, 410, 280, 390, 510, 620, 700, 300, 290, 450, ...]`
+`k = 7`
+ 
+Índices:     0     1     2     3     4     5     6     7     8     9
+Valores:  [ 320,  410,  280,  390,  510,  620,  700,  300,  290,  450 ]
+
+1. Ventana inicial (inicio = 0 | índices 0..6):
+          [ 320,  410,  280,  390,  510,  620,  700 ]
+           └───────────────── Total: 3230 ─────────┘
+
+2. Deslizamiento 1 (inicio = 1 | índices 1..7):
+           -320  [ 410,  280,  390,  510,  620,  700,  300 ] (+300)
+          (sale)  └─────────────── Total: 3210 ──────────┘  (entra)
+                  Cálculo: 3230 + 300 - 320 = 3210
+
+3. Deslizamiento 2 (inicio = 2 | índices 2..8):
+                 -410  [ 280,  390,  510,  620,  700,  300,  290 ] (+290)
+                (sale)  └─────────────── Total: 3090 ──────────┘  (entra)
+                        Cálculo: 3210 + 290 - 410 = 3090
+
+#### Punto 4: comparacion versiones mejorSemana
+Mejor semana septiembre: OK -> { inicio: 23, total: 3670 }
+Fuerza Bruta 100k días: 1.278ms
+Ventana Deslizante 100k días: 0.483ms
+Coincidencia 100.000 días: OK -> { inicio: 40829, total: 5259 }
+
+**Análisis de Resultados**
+1. **Exactitud verificada:** Ambas implementaciones entregaron exactamente el mismo índice de inicio y total máximo tanto en el mes de septiembre como en el arreglo masivo de `100.000` registros aleatorios.
+2. **Ganancia de velocidad (Fuerza Bruta vs. Ventana Deslizante):** Incluso con una ventana relativamente pequeña (k = 7), la ventana deslizante tardó 0.483 ms, reduciendo el tiempo a menos de la mitad frente a los 1.278 ms de la fuerza bruta (~2.6 veces más rápida).
+  

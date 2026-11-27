@@ -297,6 +297,71 @@ function primerClienteUnico(ventas){
 }
 //console.log(primerClienteUnico(ventas))
 
+const ventasDiarias = [320, 410, 280, 390, 510, 620, 700, 300, 290, 450,
+480, 530, 610, 680, 350, 330, 420, 470, 560, 640,
+710, 380, 360, 440, 500, 590, 650, 720, 400, 370];
+
+function mejorSemanaBruta(dias, k){
+    if (dias.length < k || k<= 0) return null
+    let mejorSuma = 0;
+    let mejorInicio=0;
+    for (let i = 0;  i<= dias.length-k; i++ ) {
+        let sumaActual = 0;
+        for (let j = i; j < i + k; j++) {
+            sumaActual += dias[j];
+        }
+        if (sumaActual>mejorSuma) {
+            mejorSuma = sumaActual
+            mejorInicio = i;
+           
+        }
+    }
+    return {
+        inicio: mejorInicio,
+        total : mejorSuma
+    }
+
+}
+//console.log(mejorSemanaBruta(ventasDiarias, 7));
+
+function mejorSemana(dias,k){
+    if (dias.length < k || k<= 0) return null
+    let sumaActual=0;
+    for (let i = 0; i < k; i++) sumaActual += dias[i];
+    let mejorSuma = sumaActual;
+    let mejorInicio = 0;
+    for ( let i = k; i<dias.length; i++){
+        sumaActual = sumaActual + dias[i] - dias[i-k]
+       if (sumaActual > mejorSuma){
+            mejorSuma = sumaActual
+            mejorInicio = i - k + 1
+        }    
+    }
+     return {
+        inicio: mejorInicio,
+        total : mejorSuma
+    }
+}
+
+function parMasCercano(precios, presupuesto){
+    const ordenados = [... precios].sort((a, b) => a.precio - b.precio);
+    let izq = 0;
+    let der = ordenados.length-1;
+    let mejorSuma=-1;
+    let mejorPar = null;
+    while (izq < der){
+        const suma = ordenados[izq] + ordenados[der];
+        if (suma < presupuesto){
+            if (suma > mejorSuma){
+                mejorSuma = suma;
+                mejorPar = [ordenados[izq] , ordenados[der] ]
+            }
+        }
+    }
+
+
+}
+
 
 module.exports = {
     totalVendido,
@@ -323,6 +388,8 @@ module.exports = {
     comboRegalo,
     comboRegaloMap,
     productoEstrellaPorCiudad,
-    primerClienteUnico
+    primerClienteUnico,
+    mejorSemanaBruta,
+    mejorSemana
 
 };
