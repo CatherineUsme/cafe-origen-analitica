@@ -379,3 +379,41 @@ Al migrar a estructuras basadas en tablas *hash* (`Set` y `Map`), las búsquedas
 
 3. **Criterio de selección y arquitectura (`Map` vs. `Set`):**
 Aunque tanto `Set` como `Map` cumplen ampliamente con el límite de `< 1 s`, la implementación con `Map` ofrece una ventaja estratégica para el negocio: además de identificar clientes recurrentes, almacena el conteo exacto de compras por cliente. Separar la obtención del `Map` de frecuencias de la extracción de recurrentes permite reutilizar esa estructura para otros indicadores comerciales (como clientes de compra única o segmentos frecuentes) sin volver a recorrer el historial de ventas.
+
+## Reto 10
+
+### Punto 2: fuerza bruta
+**Estrategia utilizada:** Búsqueda exhaustiva mediante dos ciclos `for` anidados. El ciclo externo (`i`) selecciona un producto base y el ciclo interno (`j = i + 1`) lo compara contra todos los productos siguientes del catálogo para verificar si la suma de sus precios coincide exactamente con el valor de la tarjeta regalo.
+**Complejidad Temporal — O(n^2):** Para un catálogo de n productos, en el peor caso (cuando la combinación está al final o no existe solución y la función devuelve `null`), el algoritmo realiza {n(n - 1)}/2 comparaciones.
+**Complejidad Espacial — O(1):** No crea estructuras de datos auxiliares que crezcan con el tamaño de la entrada; únicamente utiliza variables escalares para los índices (`i`, `j`) y devuelve un arreglo fijo de dos elementos al encontrar coincidencia.
+
+### Punto 4: Traza comboRegaloMap(catalogo, 87000)
+
+| Paso | Producto evaluado (`p.producto`) | `p.precio` | `falta = 87000 - p.precio` | ¿`vistos.has(falta)`? | Acción en `vistos` / Retorno                                |
+| :--- | :--------------------------------| :--------- | :------------------------- | :---------------------| :---------------------------------------------------------- |
+| `1`  | `Origen Nariño 250 g`            | `26000`    | `61000`                    | ❌ No (`false`)       | `vistos.set(26000, "Origen Nariño 250 g")`                  |
+| `2`  | `Origen Huila 500 g`             | `42000`    | `45000`                    | ❌ No (`false`)       | `vistos.set(42000, "Origen Huila 500 g")`                   |
+| `3`  | `Origen Sierra 500 g`            | `45000`    | `42000`                    | ✅ Sí (`true`)        | **Retorna `["Origen Huila 500 g", "Origen Sierra 500 g"]`** |
+
+### Punyo 5: productoEstrellaPorCiudad
+**Regla de desempate en `productoEstrellaPorCiudad(ventas)`:** Para determinar el producto con mayor frecuencia dentro de cada ciudad se utiliza comparación estricta (`cantidad > maxApariciones`). En caso de empate entre dos o más productos con la misma cantidad máxima de apariciones, conserva el puesto el primer producto en alcanzar dicha frecuencia según el orden cronológico del historial de venta
+
+### Punto 7: Analisis de la complejidad nuevas funciones
+
+| Función       | Estructura Principal | C. Temporal | C. Espacial | Justificación Técnica                                                                        |
+| :-------------| :------------------- | :---------- | :-----------| :------------------------------------------------------------------------------------------- |
+| comboRegaloMap| `Map` (`vistos`)     | O(n)        | O(n)        | Recorre el catálogo una única vez. En cada iteración calcula el faltante y consulta `vistos.has(falta)` en tiempo constante promedio O(1), evitando los ciclos anidados O(n^2) de la versión de fuerza bruta. |
+| productoEstrellaPorCiudad| `Map` anidado (`ciudad => Map(producto => conteo)`) | O(n) | O(n)    | Realiza una primera pasada lineal sobre las n ventas para agrupar por ciudad normalizada y contar apariciones de productos en O(1). Luego recorre las c ciudades y sus p productos únicos para hallar el máximo de cada grupo. |
+| primerClienteUnico| `Map` (`conteo`) | O(n)       | O(n)  | Ejecuta dos recorridos secuenciales no anidados sobre `ventas`: el primero (O(n)) registra la frecuencia de compras de cada cliente en `conteo`, y el segundo (O(n)) consulta `conteo.get(v.cliente) === 1` en O(1) hasta retornar el primer cliente único. Total: O(n) + O(n) = O(n) |
+
+**Casos borde:**
+1. **Sin solución posible:**
+    * En `comboRegaloMap`, si ningún par de productos distintos suma el valor de la tarjeta regalo (ej. `$50.000`), el ciclo finaliza y retorna `null`.
+    * En `primerClienteUnico`, si todos los clientes compraron más de una vez, el segundo recorrido termina sin coincidencias y retorna `null`.
+2. **Arreglo vacío (`[]`):**
+    * `comboRegaloMap([], valor)` -> `null`.
+    * `productoEstrellaPorCiudad([])` -> `[]` (arreglo vacío sin ciudades).
+    * `primerClienteUnico([])`-> `null`.
+3. **Normalización y duplicados propios:**
+    * En `comboRegaloMap`, la consulta `vistos.has(falta)` se ejecuta antes de `vistos.set(p.precio, p.producto)` para impedir que un producto que cueste exactamente la mitad del bono se empareje consigo mismo.
+    * En `productoEstrellaPorCiudad`, `v.ciudad.trim().toLowerCase()` unifica variaciones de formato en ciudad.

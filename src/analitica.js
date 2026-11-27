@@ -1,4 +1,5 @@
 const ventas=require("./datos");
+const CATALOGO=require("./catalogo");
 
 
 //Funcion valorVenta
@@ -232,6 +233,71 @@ function comprasPorCliente(ventas){
     return recurrentes
 }
 
+function comboRegalo(catalogo, valor){
+    for (let i=0; i<catalogo.length; i++){
+        for (let j = i + 1; j < catalogo.length; j++){
+            if (catalogo[i].precio + catalogo[j].precio === valor) {
+                return [catalogo[i].producto, catalogo[j].producto]
+            }
+        }
+    };
+    return null
+};
+//console.log(comboRegalo(CATALOGO, 87000))
+
+function comboRegaloMap(catalogo, valor) {
+    const vistos = new Map();
+    for (const p of catalogo){
+        const falta = valor - p.precio; 
+        if( vistos.has(falta)) return [vistos.get(falta), p.producto];
+        vistos.set(p.precio , p.producto);
+    }
+    return null
+}
+//console.log(comboRegaloMap(CATALOGO, 87000))
+
+function productoEstrellaPorCiudad(ventas){
+    const conteoPorCiudad = new Map();
+    for (const v of ventas){
+        const ciudad=v.ciudad.trim().toLowerCase();
+        if(!conteoPorCiudad.has(ciudad)) conteoPorCiudad.set(ciudad, new Map())
+        const productos = conteoPorCiudad.get(ciudad)
+        productos.set(v.producto, (productos.get(v.producto) || 0) + 1)
+    }
+    const estrellas = [];
+    for (const [ciudad, productos] of conteoPorCiudad) {
+        let maxApariciones = 0;
+        let productoEstrella = "";
+        for (const [producto , cantidad ] of productos){
+            if (cantidad > maxApariciones) {
+                maxApariciones=cantidad
+                productoEstrella=producto
+            }
+        }
+        estrellas.push({ 
+            ciudad,
+            producto: productoEstrella,
+            apariciones: maxApariciones 
+        });
+    }
+    return estrellas
+}
+//console.log(productoEstrellaPorCiudad(ventas))
+
+function primerClienteUnico(ventas){
+    const conteo = new Map();
+    for (const v of ventas){
+        const clave = v.cliente
+        conteo.set(clave, (conteo.get(clave) || 0) +1 )
+    }
+    for (const v of ventas){
+        if (conteo.get(v.cliente)=== 1 ) return v.cliente
+    }
+    return null
+}
+//console.log(primerClienteUnico(ventas))
+
+
 module.exports = {
     totalVendido,
     totalVendidoM,
@@ -253,5 +319,10 @@ module.exports = {
     totalCiudadCadena,
     totalCiudadUnaPasada, 
     clientesRecurrentesSet,
-    comprasPorCliente
+    comprasPorCliente,
+    comboRegalo,
+    comboRegaloMap,
+    productoEstrellaPorCiudad,
+    primerClienteUnico
+
 };
