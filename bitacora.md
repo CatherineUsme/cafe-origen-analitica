@@ -360,3 +360,22 @@ Caso borde 3 (variaciones de escritura): " c01 " y "C01" deberían normalizarse 
 3. Fuerza bruta y su complejidad:La versión original clientesRecurrentes usa dos ciclos for anidados más .includes() interno, lo que da O(n^2) en promedio y O(n^3) en el peor caso (tardó 64.1 s con 100.000, incumpliendo el límite de < 1 s).
 
 4. Idea de optimización:Eliminar el ciclo interno sustituyendo las búsquedas repetidas por estructuras con acceso promedio O(1): primero con dos Set (vistos y recurrentes) y luego con un Map de conteo de frecuencias (comprasPorCliente), logrando tiempo lineal O(n) a cambio de memoria adicional O(n).
+
+### Punto 5: Medicion de versiones
+
+| Tamaño del Lote ($n$) | `clientesRecurrentes` O(n^2)   | `clientesRecurrentesSet` (O(n)) | `comprasPorCliente` con `Map` (O(n)) |
+| :-------------------- | :----------------------------- | :-------------------------------| :------------------------------------|
+| **`1.000` ventas**    | `2.648 ms`                     | `0.323 ms`                      | `0.210 ms`                           |
+| **`10.000` ventas**   | `377.235 ms`                   | `1.655 ms`                      | `1.035 ms`                           |
+| **`100.000` ventas**  | `48.286 s` (`48.286 ms`)       | `18.338 ms`                     | `15.235 ms`                          |
+
+### Punto 6: Analisis intercambio tiempo vs memoria
+1. **Reducción de complejidad temporal:** La versión original comparaba cada transacción contra el resto del historial mediante ciclos anidados y realizaba búsquedas secuenciales con `.includes()`. Esto provocaba que con `100.000` ventas tardara `48,286 segundos`, incumpliendo el requisito del marketplace de responder en menos de un segundo.
+Al migrar a estructuras basadas en tablas *hash* (`Set` y `Map`), las búsquedas e inserciones pasaron a ejecutarse en tiempo constante promedio O(1), reduciendo el tiempo de procesamiento para `100.000` ventas a `18,338 ms` con `Set` y `15,235 ms` con `Map`.
+
+2. **Costo en complejidad espacial (O(n) en memoria auxiliar):** Para lograr esta ganancia en velocidad de CPU, se sacrificó memoria RAM adicional mediante estructuras auxiliares proporcionales a la cantidad de clientes únicos (O(k)):
+  * En `clientesRecurrentesSet`: dos conjuntos (`vistos` y `recurrentes`) más el arreglo final.
+  * En `comprasPorCliente`: un `Map` (`conteo`) para registrar la frecuencia por cliente y el arreglo `recurrentes` de salida.
+
+3. **Criterio de selección y arquitectura (`Map` vs. `Set`):**
+Aunque tanto `Set` como `Map` cumplen ampliamente con el límite de `< 1 s`, la implementación con `Map` ofrece una ventaja estratégica para el negocio: además de identificar clientes recurrentes, almacena el conteo exacto de compras por cliente. Separar la obtención del `Map` de frecuencias de la extracción de recurrentes permite reutilizar esa estructura para otros indicadores comerciales (como clientes de compra única o segmentos frecuentes) sin volver a recorrer el historial de ventas.

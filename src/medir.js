@@ -77,3 +77,21 @@ console.timeEnd(`ventasDelDia`);
 console.time(`topProductosPorValor`);
 analitica.topProductosPorValor(lote10k, "2026-09-07");
 console.timeEnd(`topProductosPorValor`);
+
+const muestraClientes = [1000, 10000, 100000];
+
+
+for (const n of muestraClientes){
+    const lote = generarVentas(n);
+    console.log(`Muesta de clientes n=${n}`)
+    console.time(`clientesRecurrentes`);
+    analitica.clientesRecurrentes(lote);
+    console.timeEnd(`clientesRecurrentes`);
+    console.time(`clientesRecurrentesSet`);
+    analitica.clientesRecurrentesSet(lote);
+    console.timeEnd(`clientesRecurrentesSet`);
+    console.time(`comprasPorCliente`);
+    analitica.comprasPorCliente(lote);
+    console.timeEnd(`comprasPorCliente`);
+    
+}
