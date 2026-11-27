@@ -1,5 +1,7 @@
 const ventas = require("./datos");
 const analitica = require("./analitica");
+const {generarVentas} = require("./generador");
+
 
 
 function comparar (nombreIndicador, resulCiclo, resulMetodo){
@@ -26,3 +28,22 @@ comparar(
   analitica.ventasPorCiudad(ventas, "Medellín"),
   analitica.ventasPorCiudadM(ventas,  "Medellín")
 )
+
+//Comparacion metodos clientes recurrentes
+
+//comparacion ventas dia 1
+const origOrdenado = JSON.stringify([ ... analitica.clientesRecurrentes(ventas)].sort());
+const setOrdenado = JSON.stringify([... analitica.clientesRecurrentesSet(ventas)].sort());
+const mapOrdenado = JSON.stringify([... analitica.comprasPorCliente(ventas)].sort())
+console.log({ origOrdenado, setOrdenado, mapOrdenado })
+const estadoDia1 = (origOrdenado === setOrdenado && setOrdenado ===  mapOrdenado) ? "ok" : "verificar";
+console.log(`Clientes recurrentes dia 1 ${estadoDia1}`)
+
+//comparacion con 5000 ventas
+const lote = generarVentas(5000);
+const origOrdenado2 = JSON.stringify([ ... analitica.clientesRecurrentes(lote)].sort());
+const setOrdenado2 = JSON.stringify([... analitica.clientesRecurrentesSet(lote)].sort());
+const mapOrdenado2 = JSON.stringify([... analitica.comprasPorCliente(lote)].sort())
+const estado5000 = (origOrdenado2 === setOrdenado2 && setOrdenado2 ===  mapOrdenado2) ? "ok" : "verificar";
+console.log(`Clientes recurrentes 5000 ventas ${estado5000}`)
+

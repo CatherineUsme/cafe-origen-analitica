@@ -222,7 +222,7 @@ function clientesRecurrentesSet(ventas){
 function comprasPorCliente(ventas){
     const conteo = new Map();
     for (const v of ventas){
-        const clave = v.cliente.trim().toLowerCase();
+        const clave = v.cliente
         conteo.set(clave, (conteo.get(clave) || 0) +1 )
     }
     const recurrentes = [];
@@ -251,5 +251,7 @@ module.exports = {
     primeraVentaInstrumentada,
     clientesRecurrentes,
     totalCiudadCadena,
-    totalCiudadUnaPasada
+    totalCiudadUnaPasada, 
+    clientesRecurrentesSet,
+    comprasPorCliente
 };
