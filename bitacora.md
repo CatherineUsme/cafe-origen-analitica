@@ -450,7 +450,7 @@ Valores:  [ 320,  410,  280,  390,  510,  620,  700,  300,  290,  450 ]
                 (sale)  └─────────────── Total: 3090 ──────────┘  (entra)
                         Cálculo: 3210 + 290 - 410 = 3090
 
-#### Punto 4: comparacion versiones mejorSemana
+### Punto 4: comparacion versiones mejorSemana
 Mejor semana septiembre: OK -> { inicio: 23, total: 3670 }
 Fuerza Bruta 100k días: 1.278ms
 Ventana Deslizante 100k días: 0.483ms
@@ -459,4 +459,28 @@ Coincidencia 100.000 días: OK -> { inicio: 40829, total: 5259 }
 **Análisis de Resultados**
 1. **Exactitud verificada:** Ambas implementaciones entregaron exactamente el mismo índice de inicio y total máximo tanto en el mes de septiembre como en el arreglo masivo de `100.000` registros aleatorios.
 2. **Ganancia de velocidad (Fuerza Bruta vs. Ventana Deslizante):** Incluso con una ventana relativamente pequeña (k = 7), la ventana deslizante tardó 0.483 ms, reduciendo el tiempo a menos de la mitad frente a los 1.278 ms de la fuerza bruta (~2.6 veces más rápida).
-  
+
+### Punto 6: Traza de Dos Punteros `parMasCercano(CATALOGO, 100000)`
+
+**Paso previo (Ordenamiento ascendente por `.precio`):**
+  `[18.000 (Filtros), 26.000 (Nariño 250g), 42.000 (Huila 500g), 45.000 (Sierra 500g), 79.000 (Huila 1kg), 95.000 (Prensa), 120.000 (Molino)]`
+  *(Índices: `0` al `6`)*
+
+| Paso | `izq` (Producto y precio) | `der` (Producto y precio) | `suma` | ¿`suma <= 100.000`? | `mejorSuma` / `mejorPar` | Movimiento y Justificación |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **1** | `0`: Filtros (`$18.000`) | `6`: Molino (`$120.000`) | `$138.000` | ❌ No (`> 100.000`) | `-1` / `null` | **`der--`** (`6 -> 5`): La suma excede el presupuesto; se retrocede el puntero derecho para reducir el costo total. |
+| **2** | `0`: Filtros (`$18.000`) | `5`: Prensa (`$95.000`) | `$113.000` | ❌ No (`> 100.000`) | `-1` / `null` | **`der--`** (`5 -> 4`): Aún supera `$100.000`; se sigue bajando el precio desde la derecha. |
+| **3** | `0`: Filtros (`$18.000`) | `4`: Huila 1kg (`$79.000`) | **`$97.000`** | ✅ **Sí (`<= 100.000`)** | **`$97.000`** (`[Filtros, Huila 1kg]`) | **`izq++`** (`0 -> 1`): Pareja válida y nuevo máximo (`97.000 > -1`). Se avanza el puntero izquierdo buscando acercarse aún más a `$100.000`. |
+| **4** | `1`: Nariño (`$26.000`) | `4`: Huila 1kg (`$79.000`) | `$105.000` | ❌ No (`> 100.000`) | `$97.000` (`[Filtros, Huila 1kg]`) | **`der--`** (`4 -> 3`): Se pasó del límite (`105.000 > 100.000`); se reduce el puntero derecho. |
+| **5** | `1`: Nariño (`$26.000`) | `3`: Sierra (`$45.000`) | `$71.000` | ✅ Sí (`<= 100.000`) | `$97.000` *(sin cambio)* | **`izq++`** (`1 -> 2`): Es válida, pero `$71.000 < $97.000` (no supera el mejor par guardado). Se avanza `izq` para aumentar la suma. |
+| **6** | `2`: Huila 500g (`$42.000`) | `3`: Sierra (`$45.000`) | `$87.000` | ✅ Sí (`<= 100.000`) | `$97.000` *(sin cambio)* | **`izq++`** (`2 -> 3`): Válida, pero `$87.000 < $97.000`. Al avanzar `izq` a `3`, `izq === der` y termina el ciclo `while (izq < der)`. |
+
+* **Resultado retornado:** `[{ producto: 'Filtros de papel x100', precio: 18000 }, { producto: 'Origen Huila 1 kg', precio: 79000 }]` (Total: **`$97.000`**).
+
+### Punto 7:  Clasificación de Complejidad Algorítmica
+
+| Función                                | Técnica | Complejidad Temporal | Complejidad Espacial | Justificación Técnica |
+| :--------------------------------------| :--- | :--- | :--- | :--- |
+| **`mejorSemanaBruta(dias, k)`**        | Fuerza bruta (ciclos anidados) | **O(n \cdot k)** | **O(1)** | Evalúa cada uno de los $n - k + 1$ bloques posibles recalculando desde cero las k sumas internas en cada desplazamiento. Solo usa variables escalares. |
+| **`mejorSemana(dias, k)`**             | Ventana deslizante de tamaño fijo | **O(n)** | **O(1)** | Calcula la suma inicial de los primeros k elementos (O(k)) y desliza la ventana hasta el final en un único recorrido (O(n - k)), actualizando el total en O(1). |
+| **`parMasCercano(catalogo, presupuesto)`** | Ordenamiento + Dos punteros | **O(n \log n)** | **O(n)** | Ordenar una copia del arreglo con `.sort()` cuesta O(n \log n) y crea una copia de tamaño n en memoria; posteriormente, el recorrido convergente de los punteros `izq` y `der` toma O(n). |

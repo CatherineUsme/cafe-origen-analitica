@@ -84,3 +84,11 @@ console.timeEnd("Ventana Deslizante 100k días");
 
 const estadoAzar = JSON.stringify(azarBruta) === JSON.stringify(azarVentana) ? "OK" : "DIFERENTE";
 console.log(`Coincidencia 100.000 días: ${estadoAzar} ->`, azarVentana);
+
+//Verificacion par mas cercano
+const pptos = [100000, 140000, 40000]
+
+for (p of pptos){
+  const par = analitica.parMasCercano(CATALOGO, p)
+  console.log(`par con presupuesto $${p.toLocaleString("es-CO")}:`, par);
+}

@@ -350,16 +350,17 @@ function parMasCercano(precios, presupuesto){
     let mejorSuma=-1;
     let mejorPar = null;
     while (izq < der){
-        const suma = ordenados[izq] + ordenados[der];
-        if (suma < presupuesto){
+        const suma = ordenados[izq].precio + ordenados[der].precio;
+        if (suma <= presupuesto){
             if (suma > mejorSuma){
                 mejorSuma = suma;
-                mejorPar = [ordenados[izq] , ordenados[der] ]
+                mejorPar = [ordenados[izq] , ordenados[der]]
             }
-        }
+            izq++
+        } 
+        else { der-- }
     }
-
-
+    return mejorPar
 }
 
 
@@ -390,6 +391,7 @@ module.exports = {
     productoEstrellaPorCiudad,
     primerClienteUnico,
     mejorSemanaBruta,
-    mejorSemana
+    mejorSemana,
+    parMasCercano
 
 };
