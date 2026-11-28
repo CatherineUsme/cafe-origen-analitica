@@ -1,4 +1,4 @@
-#  INFORME DE REDNIMIENTO
+#  INFORME DE RENDIMIENTO
 
 ## 1. Inventario y Clasificación de Rendimiento del Motor (`src/analitica.js`)
 
@@ -67,7 +67,6 @@ Para priorizar qué funciones representan una amenaza para la plataforma del mar
 4. `totalPorCiudad(ventas)` y `unidadesPorProducto(ventas)` — Tiempo: O(n) | Espacio: O(n)
    Recorren las ventas una sola vez O(n), pero construyen un objeto diccionario `{}` cuya memoria crece según la cantidad de ciudades o productos distintos (k); en el peor caso escala proporcionalmente a n.
 
----
 
 ### Nivel 3 — Riesgo Bajo (Escalabilidad lineal y memoria constante O(1))
 5. `ventasPorCiudadM(ventas, ciudad)` y `totalCiudadUnaPasada(ventas, ciudad)` — Tiempo: O(n) | Espacio: O(1)
@@ -87,6 +86,7 @@ Para reducir `clientesRecurrentes(ventas)` de O(n^2) / O(n^3) a O(n) (pasando de
   2. Búsqueda secuencial repetida en resultados (`!recurrentes.includes(...)`): Cada vez que encuentra una coincidencia, recorre linealmente el arreglo `recurrentes` desde el inicio para comprobar si el cliente ya había sido registrado antes.
 
 **¿Qué información se guardará en memoria para no buscar de nuevo?**
+
   Se utilizará un objeto diccionario `conteoClientes = {}` (el mismo patrón de conteo aplicado en `unidadesPorProducto` y `totalPorCiudad`) en un único recorrido `for...of` sobre `ventas` (complejidad espacial O(n)):
   1. Registro de frecuencia por cliente en O(1): En una sola pasada se anota cada `v.cliente` como clave única del objeto y se incrementa su contador de compras (`conteoClientes[v.cliente] = (conteoClientes[v.cliente] || 0) + 1`). Al ser claves únicas de un objeto, se eliminan automáticamente los duplicados y se evita cualquier búsqueda con `.includes()`.
   2. Extracción final lineal: Al terminar el recorrido único, se convierte el objeto con `Object.entries(conteoClientes)`, se filtran las parejas cuyo contador sea mayor a `1` (`([, compras]) => compras > 1`) y se extraen únicamente los códigos de cliente con `.map(([cliente]) => cliente)`.

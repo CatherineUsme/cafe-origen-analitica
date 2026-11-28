@@ -4,25 +4,25 @@
 
 ### Diccionario de Datos (`ventas`)
 
-    | Propiedad  | Tipo     | Significado                                                                |
-    | `id`       | `number` | Identificador único numérico de cada registro de venta.                    |
-    | `fecha`    | `string` | Fecha en que se realizó la venta (en formato ISO `AAAA-MM-DD`).            |
-    | `cliente`  | `string` | Código identificador único del cliente que realizó la compra (ej. `"C01"`).|
-    | `producto` | `string` | Nombre y presentación (gramaje) del café vendido.                          |
-    | `ciudad`   | `string` | Ciudad donde se registró o entregó la venta.                               |
-    | `cantidad` | `number` | Número de unidades o bolsas vendidas en la transacción.                    |
-    | `precio`   | `number` | Precio unitario de cada producto en pesos colombianos (COP).               |
+  | Propiedad  | Tipo     | Significado                                                                |
+  | `id`       | `number` | Identificador único numérico de cada registro de venta.                    |
+  | `fecha`    | `string` | Fecha en que se realizó la venta (en formato ISO `AAAA-MM-DD`).            |
+  | `cliente`  | `string` | Código identificador único del cliente que realizó la compra (ej. `"C01"`).|
+  | `producto` | `string` | Nombre y presentación (gramaje) del café vendido.                          |
+  | `ciudad`   | `string` | Ciudad donde se registró o entregó la venta.                               |
+  | `cantidad` | `number` | Número de unidades o bolsas vendidas en la transacción.                    |
+  | `precio`   | `number` | Precio unitario de cada producto en pesos colombianos (COP).               |
 
 
 ### Casos borde detectados
 
-    Problemas en los datos                         | Decision
-    Ciudades: hay un Medellín con m minuscula      | Estandarizar antes de procesar
-    Cantidades: la venta 8 tiene cantidad en cero  | No cuenta en el ticket
-    Clientes: hay clientes con varias ventas       | Es válido
+  Problemas en los datos                         | Decision
+  Ciudades: hay un Medellín con m minuscula      | Estandarizar antes de procesar
+  Cantidades: la venta 8 tiene cantidad en cero  | No cuenta en el ticket
+  Clientes: hay clientes con varias ventas       | Es válido
 
 
-
+---
 ## Reto 2: los numeros del dia
 
 ### Punto 1: Plan indicador - pseudocodigo
@@ -102,7 +102,7 @@
     | `11`             | `"Medellín"`          | `"medellín"` | ✅ Sí (`true`)           | `95000`         | `356000`            |
     | `12`             | `"Bogotá "`           | `"bogotá"`   | ❌ No (`false`)          | *(Se omite)*    | `356000`            |
 
-
+---
 
 ## Reto 3:  Del ciclo al metodo
 
@@ -157,7 +157,7 @@
   **¿Qué acumulo?** Durante el `.reduce()` inicial, se acumula el dinero total generado por cada producto en el objeto `porProducto`.
   **¿Cómo agrupo?** Se agrupa inicialmente en un objeto `{}` usando `v.producto` como clave, antes de convertirlo a arreglo para ordenarlo de mayor a menor (`(a, b) => b[1] - a[1]`).
 
-
+---
 
 ## Reto 4:  Analitica el primer reporte
 
@@ -185,7 +185,7 @@
 **Causa:** Falta de validación previa para evitar la división entre cero cuando el contador validas es igual a 0.
 **Corrección:** Se incorporó una validación explícita antes de realizar la división en ticketPromedio(ventas), asegurando que si validas === 0 la función retorne 0 directamente.
 
-
+---
 
 ## Reto 5: ¿cuanto cuesta cada reporte?
 
@@ -220,6 +220,7 @@ n=10
   * `totalVendido` realiza 1n operaciones (1 visita por elemento).
   * `ventaMayor` y `totalPorCiudad` realizan 2n operaciones (1 visita más 1 comparación por elemento). Aunque tienen un factor constante de `2`, en notación Big O ambas pertenecen a la misma clase de crecimiento lineal O(n) por simplificacion.
 
+---
 
 ## Reto 6: el reporte se volvio lento
 
@@ -279,7 +280,7 @@ Dentro de los dos ciclos anidados O(n^2), la función ejecuta `!recurrentes.incl
 ### Punto 7: Conclusion ejecutiva para la genrencia
 El reporte se vuelve tan lento porque el sistema está revisando las facturas comparando **cada venta contra todas las demás ventas del historial, una por una**. Con una muestra pequeña de mil ventas esto toma apenas unos milisegundos, pero con un historial de cien mil o un millón de ventas, la primera factura se compara contra las 999.999 restantes, la segunda contra 999.998, y así sucesivamente hasta realizar cientos de miles de millones de revisiones repetidas, haciendo que el reporte tarde más de una hora en responder.
 
-
+---
 
 ## Reto 7: Tiempo, memoria y cadena de metodos
 
@@ -324,6 +325,8 @@ Según las reglas de simplificación de Big O, las constantes multiplicativas se
 
 Se decide conservar `totalCiudadUnaPasada` como la implementación oficial en el motor (`src/analitica.js`). Aunque la versión encadenada (`totalCiudadCadena`) resulta expresiva, la versión de una sola pasada ofrece una lectura igual de clara y directa con `for...of`, mientras que es más rápida en tiempo real y consume memoria constante O(1) al no instanciar arreglos intermedios, un factor crítico dado que el servidor del marketplace opera con recursos de memoria RAM limitados.
 
+---
+
 ## Reto 9: clientes recurrentes en tiempo lineal
 
 ### Punto 1: Metodo de la sesion 
@@ -361,6 +364,8 @@ Al migrar a estructuras basadas en tablas *hash* (`Set` y `Map`), las búsquedas
 
 3. **Criterio de selección y arquitectura (`Map` vs. `Set`):**
 Aunque tanto `Set` como `Map` cumplen ampliamente con el límite de `< 1 s`, la implementación con `Map` ofrece una ventaja estratégica para el negocio: además de identificar clientes recurrentes, almacena el conteo exacto de compras por cliente. Separar la obtención del `Map` de frecuencias de la extracción de recurrentes permite reutilizar esa estructura para otros indicadores comerciales (como clientes de compra única o segmentos frecuentes) sin volver a recorrer el historial de ventas.
+
+---
 
 ## Reto 10: Combos de regalo y frecuencia
 
@@ -402,6 +407,8 @@ Aunque tanto `Set` como `Map` cumplen ampliamente con el límite de `< 1 s`, la 
     * En `comboRegaloMap`, la consulta `vistos.has(falta)` se ejecuta antes de `vistos.set(p.precio, p.producto)` para impedir que un producto que cueste exactamente la mitad del bono se empareje consigo mismo.
     * En `productoEstrellaPorCiudad`, `v.ciudad.trim().toLowerCase()` unifica variaciones de formato en ciudad.
 
+
+---
 
 ## Reto 11: La mejor racha y el presupuesto exacto
 
@@ -472,6 +479,6 @@ Coincidencia 100.000 días: OK -> { inicio: 40829, total: 5259 }
 
 | Función                                | Técnica | Complejidad Temporal | Complejidad Espacial | Justificación Técnica |
 | :--------------------------------------| :--- | :--- | :--- | :--- |
-| **`mejorSemanaBruta(dias, k)`**        | Fuerza bruta (ciclos anidados) | **O(n \cdot k)** | **O(1)** | Evalúa cada uno de los $n - k + 1$ bloques posibles recalculando desde cero las k sumas internas en cada desplazamiento. Solo usa variables escalares. |
+| **`mejorSemanaBruta(dias, k)`**        | Fuerza bruta (ciclos anidados) | **O(n\k)** | **O(1)** | Evalúa cada uno de los $n - k + 1$ bloques posibles recalculando desde cero las k sumas internas en cada desplazamiento. Solo usa variables escalares. |
 | **`mejorSemana(dias, k)`**             | Ventana deslizante de tamaño fijo | **O(n)** | **O(1)** | Calcula la suma inicial de los primeros k elementos (O(k)) y desliza la ventana hasta el final en un único recorrido (O(n - k)), actualizando el total en O(1). |
-| **`parMasCercano(catalogo, presupuesto)`** | Ordenamiento + Dos punteros | **O(n \log n)** | **O(n)** | Ordenar una copia del arreglo con `.sort()` cuesta O(n \log n) y crea una copia de tamaño n en memoria; posteriormente, el recorrido convergente de los punteros `izq` y `der` toma O(n). |
+| **`parMasCercano(catalogo, presupuesto)`** | Ordenamiento + Dos punteros | **O(n\log n)** | **O(n)** | Ordenar una copia del arreglo con `.sort()` cuesta O(n \log n) y crea una copia de tamaño n en memoria; posteriormente, el recorrido convergente de los punteros `izq` y `der` toma O(n). |
