@@ -196,41 +196,22 @@ n=10
 **totalPorCiudad** serian 20 operaciones, hay una visita mas una comparacion
 
 ### Punto 4: Ejecucion medir.js
-┌─────────┬─────────┬──────────────┬────────────┬────────────────┐
-│ (index) │ tamLote │ totalVendido │ ventaMayor │ totalPorCiudad │
-├─────────┼─────────┼──────────────┼────────────┼────────────────┤
-│ 0       │ 100     │ 100          │ 200        │ 100            │
-│ 1       │ 1000    │ 1000         │ 2000       │ 1000           │
-│ 2       │ 10000   │ 10000        │ 20000      │ 10000          │
-│ 3       │ 100000  │ 100000       │ 200000     │ 100000         │
-└─────────┴─────────┴──────────────┴────────────┴────────────────┘
+| `(index)` | `tamLote`| `totalVendido` | `ventaMayor` | `totalPorCiudad` |
+| :-------- | :------- | :------------- | :----------- | :--------------- |
+| `0`       | `100`    | `100`          | `200`        | `100`            |
+| `1`       | `1000`   | `1000`         | `2000`       | `1000`           |
+| `2`       | `10000`  | `10000`        | `20000`      | `10000`          |
+| `3`       | `100000` | `100000`       | `200000`     | `100000`         |
+
 
 ###  Punto 5: funcion complejidad constante
-┌─────────┬─────────┬──────────────┬────────────┬────────────────┬──────────────┐
-│ (index) │ tamLote │ totalVendido │ ventaMayor │ totalPorCiudad │ primeraVenta │
-├─────────┼─────────┼──────────────┼────────────┼────────────────┼──────────────┤
-│ 0       │ 100     │ 100          │ 200        │ 100            │ 1            │
-│ 1       │ 1000    │ 1000         │ 2000       │ 1000           │ 1            │
-│ 2       │ 10000   │ 10000        │ 20000      │ 10000          │ 1            │
-│ 3       │ 100000  │ 100000       │ 200000     │ 100000         │ 1            │
-└─────────┴─────────┴──────────────┴────────────┴────────────────┴──────────────┘
+| `(index)` | `tamLote` | `totalVendido` | `ventaMayor` | `totalPorCiudad` | `primeraVenta` |
+| :---------| :-------- | :------------- | :----------- | :--------------- | :------------- |
+| `0`       | `100`     | `100`          | `200`        | `100`            | `1`            |
+| `1`       | `1000`    | `1000`         | `2000`       | `1000`           | `1`            |
+| `2`       | `10000`   | `10000`        | `20000`      | `10000`          | `1`            |
+| `3`       | `100000`  | `100000`       | `200000`     | `100000`         | `1`            |
 
-## 8. Análisis de Rendimiento y Complejidad Computacional (Big O)
-
-En esta etapa se construyó un generador de datos sintéticos (`src/generador.js`) y se instrumentaron las funciones de `src/analitica.js` para medir experimentalmente cómo crece el número de operaciones básicas cuando aumenta el volumen de ventas (`n`)[cite: 4].
-
-### 8.1. Predicción Inicial (Antes de Medir)
-* **Hipótesis:** Si el tamaño de entrada `n` se multiplica por 10, el número de operaciones de `totalVendido`, `ventaMayor` y `totalPorCiudad` también se multiplicará por **10**, ya que todas recorren el arreglo una sola vez de principio a fin sin ciclos anidados (crecimiento proporcional o lineal).
-* Por el contrario, una función sin ciclos que acceda directamente a una posición en memoria (`primeraVenta`) mantendrá siempre **1** operación sin importar cuánto crezca `n`.
-
-### 8.2. Resultados Experimentales (`node src/medir.js`)
-
-| Tamaño del lote (`n`) | `totalVendido` | `ventaMayor` | `totalPorCiudad` | `primeraVenta` |
-| :-------------------- | :------------- | :----------- | :--------------- | :------------- |
-| `100`                 | `100`          | `200`        | `200`            | `1`            |
-| `1.000`               | `1.000`        | `2.000`      | `2.000`          | `1`            |
-| `10.000`              | `10.000`       | `20.000`     | `20.000`         | `1`            |
-| `100.000`             | `100.000`      | `200.000`    | `200.000`        | `1`            |
 
 ### Punto 6: clasificacion funciones
 
@@ -244,7 +225,7 @@ En esta etapa se construyó un generador de datos sintéticos (`src/generador.js
 
 ### Punto 2: Traza clientesRecurrentes
 
-## Traza de `clientesRecurrentes(ventas)` (Muestra de 5 ventas)
+#### Traza de `clientesRecurrentes(ventas)` (con 5 ventas)
 
 **Entrada de prueba:** `["C01", "C02", "C03", "C01", "C04"]` 
 
@@ -262,17 +243,19 @@ En esta etapa se construyó un generador de datos sintéticos (`src/generador.js
 | **`i = 3`**  | `"C01"`     | `j = 4`      | `"C04"`     | No        | —       | `["C01"]`             | `1` (`10`)   |
 | **`i = 4`**  | `"C04"`     | *(Fin)*      | —           | —         | —       | `["C01"]`             | `0` (`10`)   |
 
-Generalización Matemática
+**Generalización Matemática***
 **Total con 5 ventas:** 4 + 3 + 2 + 1 + 0 = 10 comparaciones
 **Fórmula para `n` ventas:** (n*(n - 1)) /2, lo que corresponde a una complejidad cuadrática O(n^2).
 
 ### Punto 4: tiempo de ejecucion
 
-n=1000: 4.681ms 
-n=2000: 12.909ms
-n=4000: 47.517ms
-n=8000: 199.74ms
-n=16000: 782.371ms
+| Tamaño del lote ($n$) | Tiempo de ejecución | Factor de crecimiento vs. paso anterior |
+| :-------------------- | :------------------ | :-------------------------------------- |
+| `1000`                | `4.681 ms`          | — (Base)                                |                       
+| `2000`                | `12.909 ms`         | `~2.76x`                                |
+| `4000`                | `47.517 ms`         | `~3.68x`                                |
+| `8000`                | `199.74 ms`         | `~4.20x`                                |
+| `16000`               | `782.371 ms`        | `~3.92x`                                |
 
 El tiempo sigue como indica la complejidad un comportamiento cuadratico, es decir en este caso donde se duplican las ventas (2n), el tiempo se multiplica por 2^2=4, por eso pasa de 47.5 ms a 199.74ms y sucesivamente
 
@@ -300,7 +283,7 @@ El reporte se vuelve tan lento porque el sistema está revisando las facturas co
 
 ## Reto 7: Tiempo, memoria y cadena de metodos
 
-## Punto 4: Análisis versiones
+### Punto 4: Análisis versiones
 
 | Métrica / Aspecto           | `totalCiudadCadena(ventas, ciudad)`         | `totalCiudadUnaPasada(ventas, ciudad)`         |
 | :-------------------------- | :------------------------------------------ | :--------------------------------------------- |
@@ -320,8 +303,7 @@ Según las reglas de simplificación de Big O, las constantes multiplicativas se
 
 ### Punto 6: Clasificación Espacial de las Funciones de analitica.js
 
-|                  Función                 | Complejidad  | Justificación del Consumo de Memoria Adicional                                       |
-|                                          | Espacial     |                                                                                      |
+|                   Función                | C. Espacial  | Justificación del Consumo de Memoria Adicional                                       |
 | :--------------------------------------- | :------------| :------------------------------------------------------------------------------------|
 | `totalVendido` / `totalVendidoM`         | O(1)         | Solo utiliza un acumulador numérico simple en memoria.                               |
 | `unidadesVendidas` / `unidadesVendidasM` | O(1)         | Solo utiliza un contador numérico entero.                                            |
@@ -342,24 +324,24 @@ Según las reglas de simplificación de Big O, las constantes multiplicativas se
 
 Se decide conservar `totalCiudadUnaPasada` como la implementación oficial en el motor (`src/analitica.js`). Aunque la versión encadenada (`totalCiudadCadena`) resulta expresiva, la versión de una sola pasada ofrece una lectura igual de clara y directa con `for...of`, mientras que es más rápida en tiempo real y consume memoria constante O(1) al no instanciar arreglos intermedios, un factor crítico dado que el servidor del marketplace opera con recursos de memoria RAM limitados.
 
-## Reto 9
+## Reto 9: clientes recurrentes en tiempo lineal
 
 ### Punto 1: Metodo de la sesion 
 
-1. Entender:
+1. **Entender**:
 Entrada: arreglo ventas de objetos de transacción.
 Salida: Un arreglo de textos (string[]) con los códigos de los clientes que realizaron más de una compra (> 1), sin repetir códigos en el resultado.
 Restricciones: El marketplace exige responder en menos de 1 segundo con 100.000 ventas. No se debe mutar el arreglo original ventas.
   
-2. Ejemplos y casos borde:
+2. **Ejemplos y casos borde**:
 Normal: ["C01", "C02", "C01", "C03", "C01"]["C01"] (aunque compró 3 veces, aparece 1 sola vez).
 Caso borde 1 (arreglo vacío []): => [].
 Caso borde 2 (1 sola venta ["C01"] o todos compran 1 sola vez): => [].
 Caso borde 3 (variaciones de escritura): " c01 " y "C01" deberían normalizarse con .trim().toUpperCase().
 
-3. Fuerza bruta y su complejidad:La versión original clientesRecurrentes usa dos ciclos for anidados más .includes() interno, lo que da O(n^2) en promedio y O(n^3) en el peor caso (tardó 64.1 s con 100.000, incumpliendo el límite de < 1 s).
+3. **Fuerza bruta y su complejidad**:La versión original clientesRecurrentes usa dos ciclos for anidados más .includes() interno, lo que da O(n^2) en promedio y O(n^3) en el peor caso (tardó 64.1 s con 100.000, incumpliendo el límite de < 1 s).
 
-4. Idea de optimización:Eliminar el ciclo interno sustituyendo las búsquedas repetidas por estructuras con acceso promedio O(1): primero con dos Set (vistos y recurrentes) y luego con un Map de conteo de frecuencias (comprasPorCliente), logrando tiempo lineal O(n) a cambio de memoria adicional O(n).
+4. **Idea de optimización**:Eliminar el ciclo interno sustituyendo las búsquedas repetidas por estructuras con acceso promedio O(1): primero con dos Set (vistos y recurrentes) y luego con un Map de conteo de frecuencias (comprasPorCliente), logrando tiempo lineal O(n) a cambio de memoria adicional O(n).
 
 ### Punto 5: Medicion de versiones
 
@@ -380,11 +362,13 @@ Al migrar a estructuras basadas en tablas *hash* (`Set` y `Map`), las búsquedas
 3. **Criterio de selección y arquitectura (`Map` vs. `Set`):**
 Aunque tanto `Set` como `Map` cumplen ampliamente con el límite de `< 1 s`, la implementación con `Map` ofrece una ventaja estratégica para el negocio: además de identificar clientes recurrentes, almacena el conteo exacto de compras por cliente. Separar la obtención del `Map` de frecuencias de la extracción de recurrentes permite reutilizar esa estructura para otros indicadores comerciales (como clientes de compra única o segmentos frecuentes) sin volver a recorrer el historial de ventas.
 
-## Reto 10
+## Reto 10: Combos de regalo y frecuencia
 
 ### Punto 2: fuerza bruta
 **Estrategia utilizada:** Búsqueda exhaustiva mediante dos ciclos `for` anidados. El ciclo externo (`i`) selecciona un producto base y el ciclo interno (`j = i + 1`) lo compara contra todos los productos siguientes del catálogo para verificar si la suma de sus precios coincide exactamente con el valor de la tarjeta regalo.
+
 **Complejidad Temporal — O(n^2):** Para un catálogo de n productos, en el peor caso (cuando la combinación está al final o no existe solución y la función devuelve `null`), el algoritmo realiza {n(n - 1)}/2 comparaciones.
+
 **Complejidad Espacial — O(1):** No crea estructuras de datos auxiliares que crezcan con el tamaño de la entrada; únicamente utiliza variables escalares para los índices (`i`, `j`) y devuelve un arreglo fijo de dos elementos al encontrar coincidencia.
 
 ### Punto 4: Traza comboRegaloMap(catalogo, 87000)
@@ -419,12 +403,14 @@ Aunque tanto `Set` como `Map` cumplen ampliamente con el límite de `< 1 s`, la 
     * En `productoEstrellaPorCiudad`, `v.ciudad.trim().toLowerCase()` unifica variaciones de formato en ciudad.
 
 
-## Reto 11
+## Reto 11: La mejor racha y el presupuesto exacto
 
 ### Punto 1: mejorSemanaBruta
 **Estrategia utilizada:** Dos ciclos `for` anidados. El ciclo externo (`i`) recorre cada posible día de inicio válido desde `0` hasta `dias.length - k`, y por cada posición el ciclo interno (`j`) reinicia `sumaActual = 0` y vuelve a sumar los `k` días consecutivos desde cero (`j = i` hasta `i + k - 1`), comparando cada bloque contra `mejorSuma`.
+
 **Complejidad Temporal — O(n*k) (o O(n^2) en el peor caso cuando k = n):**
 Para un arreglo de n días y una ventana de tamaño k, el ciclo externo evalúa n - k + 1 ventanas posibles y el ciclo interno ejecuta exactamente k sumas en cada una, realizando (n - k + 1), k operaciones en total.
+
 **Complejidad Espacial — O(1) (Constante):**
 No crea arreglos intermedios ni estructuras auxiliares cuyo tamaño dependa de la entrada; únicamente utiliza variables numéricas escalares y retorna un objeto fijo de dos valores.
 
@@ -433,24 +419,29 @@ No crea arreglos intermedios ni estructuras auxiliares cuyo tamaño dependa de l
 `ventasDiarias`= `[320, 410, 280, 390, 510, 620, 700, 300, 290, 450, ...]`
 `k = 7`
  
-Índices:     0     1     2     3     4     5     6     7     8     9
-Valores:  [ 320,  410,  280,  390,  510,  620,  700,  300,  290,  450 ]
+
+```text
+Índice:     0     1     2     3     4     5     6     7     8     9
+Valor:   [ 320 | 410 | 280 | 390 | 510 | 620 | 700 | 300 | 290 | 450 ]
 
 1. Ventana inicial (inicio = 0 | índices 0..6):
-          [ 320,  410,  280,  390,  510,  620,  700 ]
-           └───────────────── Total: 3230 ─────────┘
+         [ 320 | 410 | 280 | 390 | 510 | 620 | 700 ]
+          └────────────── Total: 3230 ────────────┘
 
 2. Deslizamiento 1 (inicio = 1 | índices 1..7):
-           -320  [ 410,  280,  390,  510,  620,  700,  300 ] (+300)
-          (sale)  └─────────────── Total: 3210 ──────────┘  (entra)
+          -320   [ 410 | 280 | 390 | 510 | 620 | 700 | 300 ]  (+300)
+         (sale)   └────────────── Total: 3210 ────────────┘   (entra)
                   Cálculo: 3230 + 300 - 320 = 3210
 
 3. Deslizamiento 2 (inicio = 2 | índices 2..8):
-                 -410  [ 280,  390,  510,  620,  700,  300,  290 ] (+290)
-                (sale)  └─────────────── Total: 3090 ──────────┘  (entra)
+                -410   [ 280 | 390 | 510 | 620 | 700 | 300 | 290 ]  (+290)
+               (sale)   └────────────── Total: 3090 ────────────┘   (entra)
                         Cálculo: 3210 + 290 - 410 = 3090
+```
+
 
 ### Punto 4: comparacion versiones mejorSemana
+
 Mejor semana septiembre: OK -> { inicio: 23, total: 3670 }
 Fuerza Bruta 100k días: 1.278ms
 Ventana Deslizante 100k días: 0.483ms
