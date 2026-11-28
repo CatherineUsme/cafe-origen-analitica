@@ -56,12 +56,12 @@
 
 ### Punto 6: Prueba entradas 
 
-    **Caso Arreglo vacio**:
-    **totalVendido** = debe devolver cero, al no haber ventas que sumar
-    **unidadesVendidas** = debe devolver cero, al no haber ventas que sumar
-    **ventaMayor** = debe devolver null, porque no hay ningun objeto dentro del arreglo
-    **ticketPromedio** = debe devolver cero, al no haber ventas que promediar
-    **ventasPorCiudad** = debe devolver cero, al no haber ventas que sumar
+  **Caso Arreglo vacio**:
+  **totalVendido** = debe devolver cero, al no haber ventas que sumar
+  **unidadesVendidas** = debe devolver cero, al no haber ventas que sumar
+  **ventaMayor** = debe devolver null, porque no hay ningun objeto dentro del arreglo
+  **ticketPromedio** = debe devolver cero, al no haber ventas que promediar
+  **ventasPorCiudad** = debe devolver cero, al no haber ventas que sumar
 
 ### Punto 7 - Tablas de trazas
 
@@ -118,46 +118,46 @@
   * **¿Cómo agrupo?** No aplica (reduce todo el arreglo a un único valor numérico).
 
 #### 2. `unidadesVendidasM(ventas)`
-  **¿Qué recorro?** El arreglo completo `ventas` usando `.reduce()`.
-  **¿Qué filtro?** Ningún elemento; se recorren todas las transacciones.
-  **¿Qué transformo?** De cada objeto `v` se extrae únicamente su propiedad numérica `v.cantidad`.
-  **¿Qué acumulo?** En `acum` (inicializado en `0`) se suman las unidades de cada registro para obtener el total de productos vendidos (`21` unidades).
-  **¿Cómo agrupo?** No aplica (reduce el arreglo a un único número entero).
+  * **¿Qué recorro?** El arreglo completo `ventas` usando `.reduce()`.
+  * **¿Qué filtro?** Ningún elemento; se recorren todas las transacciones.
+  * **¿Qué transformo?** De cada objeto `v` se extrae únicamente su propiedad numérica `v.cantidad`.
+  * **¿Qué acumulo?** En `acum` (inicializado en `0`) se suman las unidades de cada registro para obtener el total de productos vendidos (`21` unidades).
+  * **¿Cómo agrupo?** No aplica (reduce el arreglo a un único número entero).
 
 #### 3. `ventasPorCiudadM(ventas, ciudad)`
-  **¿Qué recorro?** El arreglo completo `ventas` usando `.reduce()`.
-  **¿Qué filtro?** Se filtran únicamente los registros cuya propiedad `v.ciudad` (normalizada con `.trim().toLowerCase()`) coincida exactamente con la `ciudad` buscada también normalizada.
-  **¿Qué transformo?** El texto de entrada `ciudad` y cada `v.ciudad` a minúsculas sin espacios laterales, y cada venta coincidente a su valor monetario mediante `valorVenta(v)`.
-  **¿Qué acumulo?** En `acum` (inicializado en `0`) se suma `valorVenta(v)` únicamente cuando la ciudad coincide; de lo contrario, se conserva el acumulado sin cambios (`: acum`).
-  **¿Cómo agrupo?** No devuelve un objeto agrupado general, sino que filtra y acumula el total para una ciudad específica.
+  * **¿Qué recorro?** El arreglo completo `ventas` usando `.reduce()`.
+  * **¿Qué filtro?** Se filtran únicamente los registros cuya propiedad `v.ciudad` (normalizada con `.trim().toLowerCase()`) coincida exactamente con la `ciudad` buscada también normalizada.
+  * **¿Qué transformo?** El texto de entrada `ciudad` y cada `v.ciudad` a minúsculas sin espacios laterales, y cada venta coincidente a su valor monetario mediante `valorVenta(v)`.
+  * **¿Qué acumulo?** En `acum` (inicializado en `0`) se suma `valorVenta(v)` únicamente cuando la ciudad coincide; de lo contrario, se conserva el acumulado sin cambios (`: acum`).
+  * **¿Cómo agrupo?** No devuelve un objeto agrupado general, sino que filtra y acumula el total para una ciudad específica.
 
 #### 4. `totalPorCiudad(ventas)`
-  **¿Qué recorro?** El arreglo completo `ventas` utilizando `.reduce()`.
-  **¿Qué filtro?** Ningún registro; todos entran en la clasificación.
-  **¿Qué transformo?**
+  * **¿Qué recorro?** El arreglo completo `ventas` utilizando `.reduce()`.
+  * **¿Qué filtro?** Ningún registro; todos entran en la clasificación.
+  * **¿Qué transformo?**
     * Cada nombre de ciudad se normaliza mediante `v.ciudad.trim().toLowerCase()` para unificar variaciones de escritura (ej. `"Bogotá"` y `"Bogotá "` quedan bajo la misma clave `"bogotá"`, y `"Medellín"` con `"medellín"` bajo `"medellín"`).
     * Cada registro `v` se transforma en su valor monetario con `valorVenta(v)`.
-  **¿Qué acumulo?** Dentro de cada clave de ciudad en el objeto acumulador, se suma el valor de la venta actual al subtotal previo (`(grupos[clave] || 0) + valorVenta(v)`).
-  **¿Cómo agrupo?** Se utiliza un objeto vacío `{}` como acumulador inicial (`grupos`), creando dinámicamente una propiedad por cada ciudad normalizada (`{ medellín: 356000, bogotá: 276000, cali: 185000, pereira: 168000 }`).
+  * **¿Qué acumulo?** Dentro de cada clave de ciudad en el objeto acumulador, se suma el valor de la venta actual al subtotal previo (`(grupos[clave] || 0) + valorVenta(v)`).
+  * **¿Cómo agrupo?** Se utiliza un objeto vacío `{}` como acumulador inicial (`grupos`), creando dinámicamente una propiedad por cada ciudad normalizada (`{ medellín: 356000, bogotá: 276000, cali: 185000, pereira: 168000 }`).
 
 #### 5. `unidadesPorProducto(ventas)`
-  **¿Qué recorro?** El arreglo completo `ventas` usando `.reduce()`.
-  **¿Qué filtro?** Ningún elemento; se consideran todos los registros del arreglo.
-  **¿Qué transformo?** De cada venta `v` se extrae su nombre (`v.producto`) como clave y su cantidad (`v.cantidad`) como valor numérico a sumar.
-  **¿Qué acumulo?** En cada propiedad del objeto acumulador se van sumando las unidades vendidas de ese producto (`(grupo[v.producto] || 0) + v.cantidad`).
-  **¿Cómo agrupo?** Mediante un objeto vacío `{}` (`grupo`), usando el nombre exacto del producto (`v.producto`) como clave única.
+  * **¿Qué recorro?** El arreglo completo `ventas` usando `.reduce()`.
+  * **¿Qué filtro?** Ningún elemento; se consideran todos los registros del arreglo.
+  * **¿Qué transformo?** De cada venta `v` se extrae su nombre (`v.producto`) como clave y su cantidad (`v.cantidad`) como valor numérico a sumar.
+  * **¿Qué acumulo?** En cada propiedad del objeto acumulador se van sumando las unidades vendidas de ese producto (`(grupo[v.producto] || 0) + v.cantidad`).
+  * **¿Cómo agrupo?** Mediante un objeto vacío `{}` (`grupo`), usando el nombre exacto del producto (`v.producto`) como clave única.
 
 #### 6. `topProductosPorValor(ventas, k)`
-  **¿Qué recorro?**
+ * **¿Qué recorro?**
     1. Primero el arreglo `ventas` con `.reduce()` para consolidar ingresos por producto.
     2. Luego el arreglo de parejas `[producto, total]` generado por `Object.entries(porProducto)` usando `.sort()`, `.slice()` y `.map()`.
-  **¿Qué filtro?** Mediante `.slice(0, k)` se recortan y conservan únicamente los primeros `k` elementos (el Top `k`) después de ordenar.
-  **¿Qué transformo?**
+  * **¿Qué filtro?** Mediante `.slice(0, k)` se recortan y conservan únicamente los primeros `k` elementos (el Top `k`) después de ordenar.
+  * **¿Qué transformo?**
     1. Cada venta `v` en su valor monetario `valorVenta(v)`.
     2. El objeto agrupado `porProducto` en un arreglo de pares `[producto, total]` con `Object.entries()` para poder aplicar `.sort()` sin mutar el arreglo original `ventas`.
     3. Cada pareja ganadora `[producto, total]` en únicamente el texto del nombre del producto usando desestructuración en `.map(([producto]) => producto)`.
-  **¿Qué acumulo?** Durante el `.reduce()` inicial, se acumula el dinero total generado por cada producto en el objeto `porProducto`.
-  **¿Cómo agrupo?** Se agrupa inicialmente en un objeto `{}` usando `v.producto` como clave, antes de convertirlo a arreglo para ordenarlo de mayor a menor (`(a, b) => b[1] - a[1]`).
+  * **¿Qué acumulo?** Durante el `.reduce()` inicial, se acumula el dinero total generado por cada producto en el objeto `porProducto`.
+  * **¿Cómo agrupo?** Se agrupa inicialmente en un objeto `{}` usando `v.producto` como clave, antes de convertirlo a arreglo para ordenarlo de mayor a menor (`(a, b) => b[1] - a[1]`).
 
 ---
 
@@ -167,25 +167,25 @@
 
 #### Incidente 1: Ciudad duplicada en el reporte ("Bogotá aparecía dos veces")
 
-  **Síntoma:** Al generar el consolidado de ventas por ciudad, "Bogotá" aparecía dividida en dos entradas separadas dentro del reporte.
-  **Entrada que lo produce:** El arreglo `ventas` de `src/datos.js`, específicamente los registros donde la propiedad `ciudad` tiene espacios en blanco al final, así como diferencias entre mayúsculas y minúsculas.
-  **Hipótesis:** La función de agrupación estaba utilizando el valor crudo `v.ciudad` directamente como clave del objeto acumulador sin limpiar espacios laterales ni estandarizar mayúsculas/minúsculas.
-  **Prueba realizada:**
-    1. Se reprodujo el fallo ejecutando una agrupación sin normalización (`grupos[v.ciudad]`), obteniendo dos claves distintas: `{ "Bogotá": 198000, "Bogotá ": 78000 }`.
-    2. Se ejecutó la versión actual `totalPorCiudad(ventas)` sobre el mismo arreglo `ventas`.
-  **Causa:** Ausencia de normalización de cadenas de texto (`string`) antes de comparar o asignar claves dinámicas en el objeto acumulador.
-  **Corrección:** Se normalizó cada nombre de ciudad utilizando `.trim().toLowerCase()` antes de usarlo como clave en `totalPorCiudad(ventas)`.
+* **Síntoma:** Al generar el consolidado de ventas por ciudad, "Bogotá" aparecía dividida en dos entradas separadas dentro del reporte.
+* **Entrada que lo produce:** El arreglo `ventas` de `src/datos.js`, específicamente los registros donde la propiedad `ciudad` tiene espacios en blanco al final, así como diferencias entre mayúsculas y minúsculas.
+* **Hipótesis:** La función de agrupación estaba utilizando el valor crudo `v.ciudad` directamente como clave del objeto acumulador sin limpiar espacios laterales ni estandarizar mayúsculas/minúsculas.
+* **Prueba realizada:**
+  1. Se reprodujo el fallo ejecutando una agrupación sin normalización (`grupos[v.ciudad]`), obteniendo dos claves distintas: `{ "Bogotá": 198000, "Bogotá ": 78000 }`.
+  2. Se ejecutó la versión actual `totalPorCiudad(ventas)` sobre el mismo arreglo `ventas`.
+* **Causa:** Ausencia de normalización de cadenas de texto (`string`) antes de comparar o asignar claves dinámicas en el objeto acumulador.
+* **Corrección:** Se normalizó cada nombre de ciudad utilizando `.trim().toLowerCase()` antes de usarlo como clave en `totalPorCiudad(ventas)`.
 
 #### Incidente 2: Ticket promedio devuelve NaN en un día sin ventas
 
-**Síntoma:** Al filtrar las ventas de un día específico sin actividad comercial y calcular su ticket promedio, el sistema mostraba NaN (Not a Number) en lugar de $0.
-**Entrada que lo produce:** Un arreglo vacío [] (resultado de filtrar una fecha sin registros, por ejemplo "2026-09-07" o "2026-09-08") o un arreglo donde todos los registros tienen cantidad <= 0 (como el registro id: 8 con cantidad: 0).
-**Hipótesis:** Cuando no existen ventas válidas en el arreglo filtrado, tanto el acumulado de dinero (total) como el contador de ventas válidas (validas) terminan el recorrido en 0. Al ejecutar la división final total / validas, JavaScript evalúa 0 / 0, cuyo resultado matemático indefinido es NaN.
-**Prueba realizada:**
+* **Síntoma:** Al filtrar las ventas de un día específico sin actividad comercial y calcular su ticket promedio, el sistema mostraba NaN (Not a Number) en lugar de $0.
+* **Entrada que lo produce:** Un arreglo vacío [] (resultado de filtrar una fecha sin registros, por ejemplo "2026-09-07" o "2026-09-08") o un arreglo donde todos los registros tienen cantidad <= 0 (como el registro id: 8 con cantidad: 0).
+* **Hipótesis:** Cuando no existen ventas válidas en el arreglo filtrado, tanto el acumulado de dinero (total) como el contador de ventas válidas (validas) terminan el recorrido en 0. Al ejecutar la división final total / validas, JavaScript evalúa 0 / 0, cuyo resultado matemático indefinido es NaN.
+* **Prueba realizada:**
     Se reprodujo el fallo ejecutando una división directa total / validas sobre un arreglo  vacío, confirmando que el retorno es NaN.
     Se ejecutó nuestra implementación actual ticketPromedio(ventas) con dos escenarios borde: un arreglo vacío [] y un arreglo con una venta de cantidad cero [{ cantidad: 0, precio: 42000 }].
-**Causa:** Falta de validación previa para evitar la división entre cero cuando el contador validas es igual a 0.
-**Corrección:** Se incorporó una validación explícita antes de realizar la división en ticketPromedio(ventas), asegurando que si validas === 0 la función retorne 0 directamente.
+* **Causa:** Falta de validación previa para evitar la división entre cero cuando el contador validas es igual a 0.
+* **Corrección:** Se incorporó una validación explícita antes de realizar la división en ticketPromedio(ventas), asegurando que si validas === 0 la función retorne 0 directamente.
 
 ---
 
@@ -193,9 +193,9 @@
 
 ### Punto 3: predicciones
 n=10
-**totalVendido** serian 10 operaciones porque solo hay visitas
-**ventaMayor** serian 20 operaciones, hay una visita mas una comparacion
-**totalPorCiudad** serian 20 operaciones, hay una visita mas una comparacion
+* **totalVendido** serian 10 operaciones porque solo hay visitas
+* **ventaMayor** serian 20 operaciones, hay una visita mas una comparacion
+* **totalPorCiudad** serian 20 operaciones, hay una visita mas una comparacion
 
 ### Punto 4: Ejecucion medir.js
 | `(index)` | `tamLote`| `totalVendido` | `ventaMayor` | `totalPorCiudad` |
@@ -217,8 +217,8 @@ n=10
 
 ### Punto 6: clasificacion funciones
 
-**Complejidad Constante — O(1) (`primeraVenta`):** El número de operaciones permanece fijo en `1` independientemente de si el arreglo tiene `100` o `100.000` registros, debido a que accede directamente por índice (`ventas[0]`) sin recorrer la estructura.
-**Complejidad Lineal — O(n) (`totalVendido`, `ventaMayor`, `totalPorCiudad`):** El trabajo crece de manera directamente proporcional al tamaño de los datos `n`:
+* **Complejidad Constante — O(1) (`primeraVenta`):** El número de operaciones permanece fijo en `1` independientemente de si el arreglo tiene `100` o `100.000` registros, debido a que accede directamente por índice (`ventas[0]`) sin recorrer la estructura.
+* **Complejidad Lineal — O(n) (`totalVendido`, `ventaMayor`, `totalPorCiudad`):** El trabajo crece de manera directamente proporcional al tamaño de los datos `n`:
   * `totalVendido` realiza 1n operaciones (1 visita por elemento).
   * `ventaMayor` y `totalPorCiudad` realizan 2n operaciones (1 visita más 1 comparación por elemento). Aunque tienen un factor constante de `2`, en notación Big O ambas pertenecen a la misma clase de crecimiento lineal O(n) por simplificacion.
 
