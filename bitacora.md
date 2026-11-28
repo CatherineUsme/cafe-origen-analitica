@@ -2,24 +2,26 @@
 
 ## Reto 1: primer tueste
 
-### Diccionario de Datos (`ventas`)
+### Punto 5: Diccionario de Datos (`ventas`)
 
-  | Propiedad  | Tipo     | Significado                                                                |
-  | `id`       | `number` | Identificador único numérico de cada registro de venta.                    |
-  | `fecha`    | `string` | Fecha en que se realizó la venta (en formato ISO `AAAA-MM-DD`).            |
-  | `cliente`  | `string` | Código identificador único del cliente que realizó la compra (ej. `"C01"`).|
-  | `producto` | `string` | Nombre y presentación (gramaje) del café vendido.                          |
-  | `ciudad`   | `string` | Ciudad donde se registró o entregó la venta.                               |
-  | `cantidad` | `number` | Número de unidades o bolsas vendidas en la transacción.                    |
-  | `precio`   | `number` | Precio unitario de cada producto en pesos colombianos (COP).               |
+| Propiedad | Tipo     | Significado                                                                 |
+| :-------- | :------- | :-------------------------------------------------------------------------- |
+| `id`      | `number` | Identificador único numérico de cada registro de venta.                     |
+| `fecha`   | `string` | Fecha en que se realizó la venta (en formato ISO `AAAA-MM-DD`).             |
+| `cliente` | `string` | Código identificador único del cliente que realizó la compra (ej. `"C01"`). |
+| `producto`| `string` | Nombre y presentación (gramaje) del café vendido.                           |
+| `ciudad`  | `string` | Ciudad donde se registró o entregó la venta.                                |
+| `cantidad`| `number` | Número de unidades o bolsas vendidas en la transacción.                     |
+| `precio`  | `number` | Precio unitario de cada producto en pesos colombianos (COP).                |
 
 
-### Casos borde detectados
+### Punto 6: Casos borde detectados
 
-  Problemas en los datos                         | Decision
-  Ciudades: hay un Medellín con m minuscula      | Estandarizar antes de procesar
-  Cantidades: la venta 8 tiene cantidad en cero  | No cuenta en el ticket
-  Clientes: hay clientes con varias ventas       | Es válido
+| Problemas en los datos                        | Decisión                       |
+| :---------------------------------------------| :----------------------------- |
+| Ciudades: hay un Medellín con m minúscula     | Estandarizar antes de procesar |
+| Cantidades: la venta 8 tiene cantidad en cero | No cuenta en el ticket         |
+| Clientes: hay clientes con varias ventas      | Es válido                      |
 
 
 ---
@@ -109,11 +111,11 @@
 ### Punto 6. Análisis Funcional por Método
 
 #### 1. `totalVendidoM(ventas)`
-  **¿Qué recorro?** El arreglo completo `ventas` usando `.reduce()`.
-  **¿Qué filtro?** Ningún elemento; se procesan todos los registros.
-  **¿Qué transformo?** Cada objeto de venta `v` en su valor monetario llamando a la función auxiliar `valorVenta(v)` (`v.cantidad * v.precio`).
-  **¿Qué acumulo?** En el acumulador `acum` (inicializado en `0`) se va sumando el dinero de cada venta hasta obtener el gran total (`$985.000`).
-  **¿Cómo agrupo?** No aplica (reduce todo el arreglo a un único valor numérico).
+  * **¿Qué recorro?** El arreglo completo `ventas` usando `.reduce()`.
+  * **¿Qué filtro?** Ningún elemento; se procesan todos los registros.
+  * **¿Qué transformo?** Cada objeto de venta `v` en su valor monetario llamando a la función auxiliar `valorVenta(v)` (`v.cantidad * v.precio`).
+  * **¿Qué acumulo?** En el acumulador `acum` (inicializado en `0`) se va sumando el dinero de cada venta hasta obtener el gran total (`$985.000`).
+  * **¿Cómo agrupo?** No aplica (reduce todo el arreglo a un único valor numérico).
 
 #### 2. `unidadesVendidasM(ventas)`
   **¿Qué recorro?** El arreglo completo `ventas` usando `.reduce()`.
